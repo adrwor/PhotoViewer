@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation_layer.main.view.MainActivity">
+
+    <fragment
+        android:id="@+id/fragment"
+        android:name="apps.aw.simplephotos.presentation_layer.browser.view.BrowserFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_browser" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/background_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/button_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="up"
+            app:layout_constraintBottom_toTopOf="@+id/button_ok"
+            app:layout_constraintEnd_toEndOf="@+id/button_ok"
+            app:layout_constraintStart_toStartOf="@+id/button_ok" />
+
+        <Button
+            android:id="@+id/button_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="left"
+            app:layout_constraintBottom_toBottomOf="@+id/button_ok"
+            app:layout_constraintEnd_toStartOf="@+id/button_ok"
+            app:layout_constraintTop_toTopOf="@+id/button_ok" />
+
+        <Button
+            android:id="@+id/button_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="right"
+            app:layout_constraintBottom_toBottomOf="@+id/button_ok"
+            app:layout_constraintStart_toEndOf="@+id/button_ok"
+            app:layout_constraintTop_toTopOf="@+id/button_ok" />
+
+        <Button
+            android:id="@+id/button_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="down"
+            app:layout_constraintEnd_toEndOf="@+id/button_ok"
+            app:layout_constraintStart_toStartOf="@+id/button_ok"
+            app:layout_constraintTop_toBottomOf="@+id/button_ok" />
+
+        <Button
+            android:id="@+id/button_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@android:string/ok"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
