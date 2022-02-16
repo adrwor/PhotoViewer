@@ -37,15 +37,20 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    public void setFocusedItem(int index) {
+        fileList.setFocus(index);
+        notifyItemChanged(index);
+    }
+
     /**
      * Sets the selection.
      * @param selection FileListSelection.Selection object
      */
     public void setSelection(int selection) {
-        int oldSelectionIndex = fileList.getSelection(); //store old selection position
-        fileList.setSelection(selection);   //update selection position
+        int oldSelectionIndex = fileList.getFocus(); //store old selection position
+        fileList.setFocus(selection);   //update selection position
         notifyItemChanged(oldSelectionIndex);    //update view at old position
-        notifyItemChanged(fileList.getSelection()); //update view at new position
+        notifyItemChanged(fileList.getFocus()); //update view at new position
     }
 
     @NonNull
@@ -64,6 +69,9 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         //holder.icon.setImageDrawable(null);   //TODO: set drawable according to file type
         int p = holder.getAdapterPosition();
         holder.text.setText(fileList.getFileList().get(p)); //set text
+        if(position == fileList.getFocus()) {
+            holder.mView.requestFocus();
+        }
     }
 
     @Override

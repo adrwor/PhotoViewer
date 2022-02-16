@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import apps.aw.simplephotos.presentation_layer.browser.BrowserContract;
 import apps.aw.simplephotos.Interactor;
+import apps.aw.simplephotos.presentation_layer.browser.utils.DisplayType;
 import apps.aw.simplephotos.presentation_layer.browser.utils.FileContentView;
 import apps.aw.simplephotos.presentation_layer.browser.utils.FileList;
 
@@ -40,10 +41,22 @@ public class BrowserPresenter implements BrowserContract.Presenter {
     }*/
 
     @Override
-    public void focus(int position) {
-//        Log.i("BrewserPresenter", "focus(" + position + ")");
-        interactor.focusChild(position);
-        view.setColumn3(interactor.getContentOfFocusedChild());
+    public void focus(int index) {
+//        Log.i("BrowserPresenter", "focus(" + position + ")");
+        interactor.focusChild(index);
+        updateFocusColumn2And3(index);
+    }
+
+    @Override
+    public void focusNextChild() {
+        interactor.focusNextChild();
+        updateFocusColumn2And3(interactor.getFocusedChildIndex());
+    }
+
+    @Override
+    public void focusPreviousChild() {
+        interactor.focusPreviousChild();
+        updateFocusColumn2And3(interactor.getFocusedChildIndex());
     }
 
 
@@ -51,12 +64,14 @@ public class BrowserPresenter implements BrowserContract.Presenter {
     public void toParent() {
         interactor.toParent();
         setColumns();
+        view.setPath(interactor.getCurrentPath());
     }
 
     @Override
     public void toFocusedChild() {
         interactor.toFocusedChild();
         setColumns();
+        view.setPath(interactor.getCurrentPath());
     }
 
 
@@ -80,6 +95,14 @@ public class BrowserPresenter implements BrowserContract.Presenter {
         view.setColumn3(interactor.getContentOfFocusedChild());
     }
 
-
+    private void updateFocusColumn2And3(int index) {
+        view.setColumn2Focus(index);
+        view.setColumn3(interactor.getContentOfFocusedChild());
+        FileContentView column3Content = interactor.getContentOfFocusedChild();
+        if(column3Content != null && column3Content.getDisplayType() == DisplayType.FILELIST) {
+            view.setColumn3Focus(column3Content.getFileList().getFocus());
+        }
+        view.setPath(interactor.getCurrentPath());
+    }
 
 }

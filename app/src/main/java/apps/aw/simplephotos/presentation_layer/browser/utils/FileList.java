@@ -9,16 +9,16 @@ import java.util.List;
 public class FileList {
 
     private List<String> fileList;  //list of filenames
-    private int selection;    //index of selected filename, as well as state
+    private int focus;    //index of focused filename
 
     public FileList() {
         this.fileList = new ArrayList<>();
-        this.selection = 0;
+        this.focus = 0;
     }
 
-    public FileList(List<String> fileList, int selection) {
+    public FileList(List<String> fileList, int focus) {
         this.fileList = fileList;
-        this.selection = selection;
+        this.focus = focus;
     }
 
     public int getListSize() {
@@ -33,12 +33,12 @@ public class FileList {
         return fileList;
     }
 
-    public void setSelection(int selection) {
-        this.selection = selection;
+    public void setFocus(int focus) {
+        this.focus = focus;
     }
 
-    public int getSelection() {
-        return selection;
+    public int getFocus() {
+        return focus;
     }
 
 

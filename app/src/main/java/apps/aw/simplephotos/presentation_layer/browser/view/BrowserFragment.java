@@ -24,7 +24,7 @@ import apps.aw.simplephotos.presentation_layer.browser.utils.FileList;
 import apps.aw.simplephotos.presentation_layer.browser.utils.ImagePreview;
 import apps.aw.simplephotos.presentation_layer.browser.view.adapter.FileListAdapter;
 import apps.aw.simplephotos.presentation_layer.browser.view.adapter.FileListNavigationAdapter;
-import apps.aw.simplephotos.presentation_layer.browser.view.views.NavigationRecyclerView;
+import apps.aw.simplephotos.presentation_layer.browser.view.views.NavigationItemView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,7 +36,7 @@ import apps.aw.simplephotos.presentation_layer.browser.view.views.NavigationRecy
  * and give back the current path (e.g. so the context can display images in full-size).
  *
  */
-public class BrowserFragment extends Fragment implements BrowserContract.View, NavigationRecyclerView.NavigationKeyHandler {
+public class BrowserFragment extends Fragment implements BrowserContract.View, NavigationItemView.NavigationKeyHandler {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -52,7 +52,7 @@ public class BrowserFragment extends Fragment implements BrowserContract.View, N
     //the android views
     private TextView pathView;
     private RecyclerView column1view;
-    private NavigationRecyclerView column2view;
+    private RecyclerView column2view;
     private RecyclerView column3view;
     private View preview;
 
@@ -102,15 +102,16 @@ public class BrowserFragment extends Fragment implements BrowserContract.View, N
         column2adapter = new FileListNavigationAdapter(
                 new FileList(),
                 (position, hasFocus) -> {
-                    Log.i("BrowserFragment", "onItemFocusChanged(" + position +", "+ hasFocus + ")");
+                    Log.i("BrowserFragment", "RecyclerView: onItemFocusedListener called");
                     if(hasFocus) {
                         presenter.focus(position);
                     }
                 },
                 position -> {
-                    Log.i("BrowserFragment", "onItemClick(" + position + ")");
+                    Log.i("BrowserFragment", "RecyclerView: onItemClickListener called");
                     presenter.focus(position);
-                }
+                },
+                this
         );
 
         column3adapter = new FileListAdapter(
@@ -147,8 +148,10 @@ public class BrowserFragment extends Fragment implements BrowserContract.View, N
         column3view.setAdapter(column3adapter);
 //        column1view.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         column1view.setFocusable(false);
+        column2view.setFocusable(false);
+        column3view.setFocusable(false);
 
-        column2view.setKeyPressHandler(this);
+
 
         preview = view.findViewById(R.id.preview);
 
@@ -177,6 +180,13 @@ public class BrowserFragment extends Fragment implements BrowserContract.View, N
     public void setColumn1(FileList column) {
         // TODO: check if column content exists, else display loading indicator
         column1adapter.setFileListSelection(column);
+        setColumn1Focus(column.getFocus());
+    }
+
+    @Override
+    public void setColumn1Focus(int index) {
+        column1view.scrollToPosition(index);
+        column1adapter.setFocusedItem(index);
     }
 
     @Override
@@ -184,8 +194,13 @@ public class BrowserFragment extends Fragment implements BrowserContract.View, N
         // TODO: check if column content exists, else display loading indicator
         if(column != null) {
             column2adapter.setFileListSelection(column);
-
+            setColumn2Focus(column.getFocus());
         }
+    }
+
+    @Override
+    public void setColumn2Focus(int index) {
+        column2view.scrollToPosition(index);
     }
 
     @Override
@@ -208,6 +223,12 @@ public class BrowserFragment extends Fragment implements BrowserContract.View, N
         }
     }
 
+    @Override
+    public void setColumn3Focus(int index) {
+        column3view.scrollToPosition(index);
+        column3adapter.setFocusedItem(index);
+    }
+
     private void setColumn3Preview(ImagePreview imagePreview) {
         // TODO: check if column content exists, else display loading indicator
         ImageView imageView = preview.findViewById(R.id.imageView);
@@ -220,6 +241,7 @@ public class BrowserFragment extends Fragment implements BrowserContract.View, N
         // TODO: check if column content exists, else display loading indicator
 //        Log.i("BrowserFragment", "setColumn3 length: " + column.getListSize());
         column3adapter.setFileListSelection(column);
+        setColumn3Focus(column.getFocus());
     }
 
     @Override
@@ -235,11 +257,13 @@ public class BrowserFragment extends Fragment implements BrowserContract.View, N
     @Override
     public void down() {
         Log.i("BrowserFragment", "down()");
+        presenter.focusNextChild();
     }
 
     @Override
     public void up() {
         Log.i("BrowserFragment", "up()");
+        presenter.focusPreviousChild();
     }
 
     @Override

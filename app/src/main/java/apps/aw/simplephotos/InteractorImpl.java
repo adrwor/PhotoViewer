@@ -17,13 +17,14 @@ import apps.aw.simplephotos.presentation_layer.browser.utils.ImagePreview;
 
 public class InteractorImpl implements Interactor {
 
-    private FileSystemNavigator fileSystemNavigator;
+    private final FileSystemNavigator fileSystemNavigator;
 
     /**
      * Constructor
      */
     public InteractorImpl() {
-        File root = new File("/storage/emulated/0/Pictures");
+        // TODO: maybe have multiple flieSystemNavigators? (with different roots, and we can switch between them)
+        File root = new File("/storage/emulated/0/");
         this.fileSystemNavigator = new FileSystemNavigator(new FileModel(root));
     }
 
@@ -41,6 +42,10 @@ public class InteractorImpl implements Interactor {
     @Override
     public void focusChild(int position) {
         fileSystemNavigator.focusChildNode(position);
+    }
+
+    public int getFocusedChildIndex() {
+        return fileSystemNavigator.getCurrentNode().getData().getFocusedChildPosition();
     }
 
     @Override
@@ -87,18 +92,16 @@ public class InteractorImpl implements Interactor {
             return new FileContentView(fileList);
         }
         else {
-            // TODO: create imagePreview
             File file = fileSystemNavigator.getFocusedChildNode().getData().getFileModel().getFile();
             ImagePreview imagePreview = new ImagePreview(file);
             return new FileContentView(imagePreview);
         }
+        // TODO: what should we return if the file is not an imagefile?
     }
 
     private FileList getSubFilesOfNode(Node<FileSystemNode> node) {
-//        Log.i("InteractorImpl", "getSubFilesOfNode(" + node.getData().getFileModel().getFile().getAbsolutePath() + ")");
         List<Node<FileSystemNode>> children = fileSystemNavigator.getChildrenOfNode(node);
         if(children == null) {
-//            Log.i("InteractorImpl", "getSubFilesOfNode(): children = null");
             return new FileList();
         }
         List<String> names = new ArrayList<>();

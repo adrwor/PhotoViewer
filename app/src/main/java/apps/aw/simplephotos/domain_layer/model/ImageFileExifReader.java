@@ -36,18 +36,6 @@ public class ImageFileExifReader {
     }
 
     /**
-     * Checks if the given fileName starts with a dot
-     * @param fileName fileName to be checked
-     * @return true if name is only an extension
-     */
-    public static boolean isExtensionOnly(String fileName) {
-        if(fileName.lastIndexOf(".") == 0) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Returns filename extension (without the dot).
      * @param fileName the filename
      * @return the extension, without the dot. If no extension: empty string.
@@ -62,8 +50,8 @@ public class ImageFileExifReader {
 
     /**
      * gets the original date
-     * @param imageFile
-     * @return
+     * @param imageFile The image file.
+     * @return The date for TAG_DATETIME_ORIGINAL
      */
     public static String getExifData(File imageFile) {
         String date = "";

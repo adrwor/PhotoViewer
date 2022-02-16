@@ -7,12 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FileSystemFacade {
-
+public class FileSystemReader {
 
     public static List<FileModel> getSubFileModels(File file) {
         File[] files = file.listFiles();
-//        Log.i("FileSystemFacade", "Number of files: " + files.length);
         if(files == null) {
             return new ArrayList<>();
         }

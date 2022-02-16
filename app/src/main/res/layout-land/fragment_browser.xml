@@ -34,13 +34,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:focusable="false"
             android:background="#F44336" />
 
-        <apps.aw.simplephotos.presentation_layer.browser.view.views.NavigationRecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/column_2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:focusable="false"
             android:background="#03A9F4" />
 
         <LinearLayout
@@ -49,6 +51,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#FFC107"
+            android:focusable="false"
             android:orientation="vertical" >
 
             <androidx.recyclerview.widget.RecyclerView

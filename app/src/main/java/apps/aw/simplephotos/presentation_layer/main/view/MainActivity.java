@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 
         //Create a MainPresenter, give it this view and the interactor
-        mainPresenter = new MainPresenter(this, Injection.provideFileSystemInteractor(getApplicationContext()));
+        mainPresenter = new MainPresenter(this, Injection.provideInteractor(getApplicationContext()));
         //Explanation:
         /*
         This Activity creates a new Interactor, gives it to the Presenter of this activity, which can then access it..
@@ -44,18 +44,22 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
          */
 
         //TODO: get menu item buttons, set onClickListeners (in listener, call method of mainPresenter)
-        
+
         //Create and add the browserFragment to this activity
-        BrowserFragment browserFragment = (BrowserFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+        BrowserFragment browserFragment = findBrowserFragment();
         if (browserFragment == null) {
             browserFragment = BrowserFragment.newInstance("haha", "hoho");
             ActivityTransactions.addFragmentToActivity(getSupportFragmentManager(), browserFragment, R.id.fragmentContainerView);
         }
 
         //Create a BrowserPresenter, give it the browserfragment and the interactor
-        new BrowserPresenter(browserFragment, Injection.provideFileSystemInteractor(getApplicationContext()));
+        new BrowserPresenter(browserFragment, Injection.provideInteractor(getApplicationContext()));
 
 
+    }
+
+    private BrowserFragment findBrowserFragment() {
+        return (BrowserFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
     }
 
 
@@ -89,13 +93,4 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void showPreferencesView() {
         //TODO: open preferences (acitivity or fragment)
     }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        Log.i("NavigationRecyclerView", "onKeyUp");
-        // TODO: somehow process these events so that we can navigate in the browser fragment.
-//        can we directly call methods of the browser fragment?
-        return true;
-    }
-
 }

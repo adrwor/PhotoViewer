@@ -1,5 +1,6 @@
 package apps.aw.simplephotos.framework_utils;
 
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.InputEvent;
 import android.view.KeyEvent;
@@ -15,9 +16,11 @@ public class Dpad {
     static int directionPressed = -1; // initialized to -1
 
     public static int getDirectionPressed(InputEvent event) {
-        if (!isDpadDevice(event)) {
-            return -1;
-        }
+        Log.i("Dpad", "InputEvent: " + event.toString());
+
+//        if (!isDpadDevice(event)) {
+//            return -1;
+//        }
 
         // If the input event is a MotionEvent, check its hat axis values.
         if (event instanceof MotionEvent) {
@@ -42,10 +45,8 @@ public class Dpad {
                 directionPressed =  Dpad.DOWN;
             }
         }
-
-        // If the input event is a KeyEvent, check its key code.
         else if (event instanceof KeyEvent) {
-
+            // If the input event is a KeyEvent, check its key code.
             // Use the key code to find the D-pad direction.
             KeyEvent keyEvent = (KeyEvent) event;
             if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
@@ -63,7 +64,7 @@ public class Dpad {
         return directionPressed;
     }
 
-    public static boolean isDpadDevice(InputEvent event) {
+    private static boolean isDpadDevice(InputEvent event) {
         // Check that input comes from a device with directional pads.
         if ((event.getSource() & InputDevice.SOURCE_DPAD)
                 != InputDevice.SOURCE_DPAD) {

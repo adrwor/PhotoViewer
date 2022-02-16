@@ -1,7 +1,5 @@
 package apps.aw.simplephotos.domain_layer.model;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -66,7 +64,7 @@ public class FileSystemNavigator {
 
     public void goToFocusedChildNode() {
         // TODO: maybe do these checks one level above, in the InteractorImpl?
-        if(currentNodeHasChildren()) {
+        if(currentNodeHasChildren() && getFocusedChildNode().hasChildren()) {
             setCurrentNode(getFocusedChildNode());
         }
     }
@@ -106,14 +104,13 @@ public class FileSystemNavigator {
     public boolean currentNodeHasChildren() {
         return hasChildren(currentNode);
     }
+
     public boolean hasChildren(Node<FileSystemNode> node) {
         List<Node<FileSystemNode>> children = getChildrenOfNode(node);
         return (children != null) && (children.size() > 0);
     }
 
-
     public List<Node<FileSystemNode>> getChildrenOfNode(Node<FileSystemNode> node) {
-//        Log.i("FileSystemNavigator", "getChildrenOfNode(" + node.getData().getFileModel().getFile().getAbsolutePath() + ")");
         syncChildrenOfNode(node);
         return node.getChildren();
     }
@@ -124,11 +121,7 @@ public class FileSystemNavigator {
      * @param node
      */
     public void syncChildrenOfNode(Node<FileSystemNode> node) {
-//        Log.i("FileSystemNavigator", "syncChildrenOfNode " + node.getData().getFileModel().getFile().getAbsolutePath());
-//        Log.i("FileSystemNavigator", "isDirectory: " + node.getData().getFileModel().isDirectory());
-//        Log.i("FileSystemNavigator", "children: " + node.getChildren());
         if(node.getData().getFileModel().isDirectory() && (node.getChildren() == null)) {
-//            Log.i("FileSystemNavigator", "Now reloadChildrenFromDisk()");
             reloadChildrenFromDisk(node);
         }
     }
@@ -140,20 +133,15 @@ public class FileSystemNavigator {
      */
     public void reloadChildrenFromDisk(@NonNull Node<FileSystemNode> node) {
         if(node.getData().getFileModel().isDirectory()) {
-//            Log.i("FileSystemNavigator", "Node " + node.getData().getFileModel().getFile().getName() + " is a directory");
             List<FileModel> subfiles;
-//            Log.i("FileSystemNavigator", "Now getSubFileModels()");
-            subfiles = FileSystemFacade.getSubFileModels(node.getData().getFileModel().getFile());
-//            Log.i("FileSystemNavigator", "Number of FileModels: " + subfiles.size());
+            subfiles = FileSystemReader.getSubFileModels(node.getData().getFileModel().getFile());
             node.setChildren(new ArrayList<>());
             for (FileModel fileModel: subfiles) {
                 node.addChild(new FileSystemNode(fileModel));
             }
         }
         else {
-//            Log.i("FileSystemNavigator", "Node " + node.getData().getFileModel().getFile().getName() + " is not a directory");
             node.setChildren(null);
         }
     }
-
 }

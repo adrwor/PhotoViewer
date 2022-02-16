@@ -18,6 +18,8 @@ public interface Interactor {
 
     void focusChild(int position);
 
+    int getFocusedChildIndex();
+
     void focusNextChild();
 
     void focusPreviousChild();

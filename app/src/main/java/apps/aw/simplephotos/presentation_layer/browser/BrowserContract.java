@@ -18,11 +18,15 @@ public interface BrowserContract {
          */
         void setColumn1(FileList column);
 
+        void setColumn1Focus(int index);
+
         /**
          * Sets the list of filenames in column 2
          * @param column
          */
         void setColumn2(FileList column);
+
+        void setColumn2Focus(int index);
 
         /**
          * Sets the content of column3
@@ -30,6 +34,7 @@ public interface BrowserContract {
          */
         void setColumn3(FileContentView fileContentView);
 
+        void setColumn3Focus(int index);
 
         /**
          * Sets the current path.
@@ -52,7 +57,11 @@ public interface BrowserContract {
     interface Presenter extends BasePresenter {
         //void stop();  //is this necessary?
 
-        void focus(int position);
+        void focus(int index);
+
+        void focusNextChild();
+
+        void focusPreviousChild();
 
         /**
          * Called when user navigates to the parent directory

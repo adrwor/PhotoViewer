@@ -1,6 +1,7 @@
 package apps.aw.simplephotos.presentation_layer.browser.view.adapter;
 
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,21 +14,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import apps.aw.simplephotos.R;
 import apps.aw.simplephotos.presentation_layer.browser.utils.FileList;
+import apps.aw.simplephotos.presentation_layer.browser.view.views.NavigationItemView;
 
 public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavigationAdapter.ViewHolder> {
 
     private FileList fileList; //contains the filelist as well as the current selection
     private ItemFocusedListener itemFocusedListener;    //handles focus events
     private ItemClickListener itemClickListener;        //handles the click events
+    private NavigationItemView.NavigationKeyHandler navigationKeyHandler;
 
     /**
      * Constructor.
      * @param fileList
      */
-    public FileListNavigationAdapter(FileList fileList, ItemFocusedListener itemFocusedListener, ItemClickListener itemClickListener) {
+    public FileListNavigationAdapter(
+            FileList fileList,
+            ItemFocusedListener itemFocusedListener,
+            ItemClickListener itemClickListener,
+            NavigationItemView.NavigationKeyHandler navigationKeyHandler
+            ) {
         this.fileList = fileList;
         this.itemFocusedListener = itemFocusedListener;
         this.itemClickListener = itemClickListener;
+        this.navigationKeyHandler = navigationKeyHandler;
     }
 
     /**
@@ -40,23 +49,14 @@ public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavi
         notifyDataSetChanged();
     }
 
-    /**
-     * Sets the selection.
-     * @param selection FileListSelection.Selection object
-     */
-    public void setSelection(int selection) {
-        int oldSelectionIndex = fileList.getSelection(); //store old selection position
-        fileList.setSelection(selection);   //update selection position
-        notifyItemChanged(oldSelectionIndex);    //update view at old position
-        notifyItemChanged(fileList.getSelection()); //update view at new position
-    }
+
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.i("FileListAdapter", "onCreateViewHolder()");
         // create a new view
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.file_view, parent, false);
+        NavigationItemView v = (NavigationItemView) LayoutInflater.from(parent.getContext()).inflate(R.layout.file_view, parent, false);
         v.setFocusable(true);
         return new ViewHolder(v);   //return a new viewholder
     }
@@ -68,13 +68,25 @@ public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavi
         //holder.icon.setImageDrawable(null);   //TODO: set drawable according to file type
         int p = holder.getAdapterPosition();
         holder.text.setText(fileList.getFileList().get(p)); //set text
-        holder.view.setOnClickListener(view -> itemClickListener.onItemClick(p));
+//        holder.view.setOnClickListener(view -> itemClickListener.onItemClick(p));
         holder.view.setOnFocusChangeListener(
-                (v, hasFocus) ->
-                {itemFocusedListener.onItemFocusChanged(p, hasFocus);
-
+                (v, hasFocus) -> {
+                    itemFocusedListener.onItemFocusChanged(p, hasFocus);
+                    if(hasFocus) {
+//                        holder.view.setBackgroundColor(Color.GRAY);
+                        holder.view.requestFocus();
+                        holder.view.findFocus().requestFocus();
+                    }
+                    else {
+//                        holder.view.setBackgroundColor(Color.TRANSPARENT);
+                    }
                 }
         );
+        holder.view.setKeyPressHandler(navigationKeyHandler);
+        if(position == fileList.getFocus()) {
+            boolean f = holder.view.requestFocus();
+            Log.i("FileListNavigationAdpt", "view took focus: " + f);
+        }
     }
 
     @Override
@@ -92,9 +104,9 @@ public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavi
     static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView icon;
         public TextView text;
-        public View view;
+        public NavigationItemView view;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(NavigationItemView itemView) {
             super(itemView);
             Log.i("FileListAdapter", "ViewHolder()");
             icon = (ImageView) itemView.findViewById(R.id.imageView2);

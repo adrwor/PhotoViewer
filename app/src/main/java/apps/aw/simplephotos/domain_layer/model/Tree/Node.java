@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Node<T> {
 
-    private final Node<T> parent;   // TODO: should parent of root be null or itself?
+    private final Node<T> parent;
     private List<Node<T>> children;
     private @NonNull T data;
 
@@ -31,6 +31,10 @@ public class Node<T> {
 
     public void setData(@NonNull T data) {
         this.data = data;
+    }
+
+    public boolean hasChildren() {
+        return getChildren() != null && !getChildren().isEmpty();
     }
 
     public List<Node<T>> getChildren() {
