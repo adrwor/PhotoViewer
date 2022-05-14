@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="apps.aw.simplephotos">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -20,11 +21,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="true"
+        android:requestLegacyExternalStorage="false"
+        android:name="MyApplication"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".presentation_layer.main.view.MainActivity"
-            android:screenOrientation="landscape">
+        <activity android:name=".ui.main.view.MainActivity"
+            android:screenOrientation="landscape"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

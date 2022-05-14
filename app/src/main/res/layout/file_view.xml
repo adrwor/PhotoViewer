@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<apps.aw.simplephotos.presentation_layer.browser.view.views.NavigationItemView xmlns:android="http://schemas.android.com/apk/res/android"
+<apps.aw.simplephotos.ui.browser.view.customviews.NavigationItemView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="40dp">
+    android:layout_height="40dp"
+    android:background="@drawable/item_background_color_states">
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:duplicateParentState="true"
         app:srcCompat="?android:attr/galleryItemBackground" />
 
     <TextView
@@ -15,5 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:text="FileName" />
-</apps.aw.simplephotos.presentation_layer.browser.view.views.NavigationItemView>
+        android:text="FileName"
+        android:duplicateParentState="true"
+        android:textColor="@color/item_text_color_states" />
+</apps.aw.simplephotos.ui.browser.view.customviews.NavigationItemView>

@@ -5,7 +5,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation_layer.main.view.MainActivity">
+    tools:context=".ui.main.view.MainActivity">
 
     <include
         android:id="@+id/menubar"
@@ -19,7 +19,6 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:name="apps.aw.simplephotos.presentation_layer.browser.view.BrowserFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/shortcutbar"

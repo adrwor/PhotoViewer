@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorFullImageDarkBackground"
-    tools:context=".presentation_layer.full_image.view.FullImageFragment">
+    tools:context=".ui.full_image.view.FullImageFragment">
 
     <ImageView
         android:id="@+id/imageView3"
