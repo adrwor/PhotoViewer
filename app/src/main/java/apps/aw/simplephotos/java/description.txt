@@ -1,0 +1,14 @@
+Domain Layer (domain package), the model
+----------------------------------------
+This package does not have any Android dependencies!
+
+Business rules here: all the logic happens in this layer.
+Regarding the android project, you will see all the interactors (use cases)
+implementations here as well.
+
+This layer is a pure java module without any Android dependencies.
+All the external components use interfaces when connecting to the business objects.
+(Both on the data side and on the ui side)
+All the interfaces are defined in this package.
+
+The state of the app is kept here.

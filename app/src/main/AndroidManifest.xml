@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="apps.aw.simplephotos">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -22,10 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:requestLegacyExternalStorage="false"
-        android:name="MyApplication"
+        android:name=".android.MyApplication"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name=".ui.main.view.MainActivity"
+        <activity android:name=".android.ui.main.MainActivity"
             android:screenOrientation="landscape"
             android:exported="true">
             <intent-filter>

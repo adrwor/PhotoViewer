@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.view.MainActivity">
+    tools:context=".android.ui.main.MainActivity">
 
     <fragment
         android:id="@+id/fragment"
-        android:name="apps.aw.simplephotos.ui.browser.view.BrowserFragment"
+        android:name="apps.aw.simplephotos.android.ui.browser.BrowserFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"

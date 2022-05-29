@@ -1,0 +1,13 @@
+UI Layer, framework utils
+-------------------------
+This package has Android dependencies.
+
+Classes in this package can depend on classes in the domain layer, but not the other way round.
+
+This package contains all the android UI, and other classes dependent on the Android framework.
+
+The domain layer can use these android framework utils through interfaces,
+but the domain layer does not have any dependency on it!
+
+This layer should not contain any business logic.
+The UI should be 'dumb'.
