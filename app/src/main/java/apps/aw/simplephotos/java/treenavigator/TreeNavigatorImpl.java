@@ -66,7 +66,7 @@ public class TreeNavigatorImpl implements TreeNavigator {
     }
 
 
-    public ItemList getItems() {
+    public ItemList getItemList() {
         return getFileListOfNode(currentNode);
     }
 

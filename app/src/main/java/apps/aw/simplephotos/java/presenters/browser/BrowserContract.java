@@ -1,5 +1,8 @@
 package apps.aw.simplephotos.java.presenters.browser;
 
+import java.util.ArrayList;
+
+import apps.aw.simplephotos.java.Image;
 import apps.aw.simplephotos.java.Item;
 import apps.aw.simplephotos.java.ItemList;
 import apps.aw.simplephotos.java.Path;
@@ -38,6 +41,11 @@ public interface BrowserContract {
         void setPath(Path path);
 
         /**
+         * Tells view to show the FullImage View
+         */
+        void showFullImageView(ArrayList<String> list, int current);
+
+        /**
          * True if view is active.
          * @return true if view is active
          */
@@ -62,6 +70,12 @@ public interface BrowserContract {
          * Called when user navigates to a child file/directory
          */
         void toChild();
+
+        /**
+         * Called when user wants to see an image in fullscreen
+         */
+        void openFullImage(int index);
+
     }
 
 }

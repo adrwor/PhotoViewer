@@ -17,6 +17,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
+import apps.aw.simplephotos.android.AppContainer;
 import apps.aw.simplephotos.java.Path;
 import apps.aw.simplephotos.java.presenters.browser.BrowserContract;
 import apps.aw.simplephotos.R;
@@ -25,8 +28,8 @@ import apps.aw.simplephotos.java.ItemList;
 import apps.aw.simplephotos.java.Image;
 import apps.aw.simplephotos.android.ui.browser.adapter.FileListAdapter;
 import apps.aw.simplephotos.android.ui.browser.adapter.FileListNavigationAdapter;
-import apps.aw.simplephotos.android.ui.browser.customviews.NavigationItemView;
-import apps.aw.simplephotos.java.presenters.main.MainContract;
+import apps.aw.simplephotos.android.ui.browser.custom_views.NavigationItemView;
+import apps.aw.simplephotos.java.presenters.browser.BrowserPresenter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,8 +43,7 @@ import apps.aw.simplephotos.java.presenters.main.MainContract;
  */
 public class BrowserFragment
         extends Fragment
-        implements BrowserContract.View,
-        NavigationItemView.NavigationKeyHandler {
+        implements BrowserContract.View, NavigationItemView.NavigationKeyHandler {
     private static final String TAG = "BrowserFragment";
 
     // TODO: Rename parameter arguments, choose names that match
@@ -97,6 +99,8 @@ public class BrowserFragment
         else {
             throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
+
+
     }
 
     @Override
@@ -108,33 +112,6 @@ public class BrowserFragment
         }
 
         Log.i("BrowserFragment", "onCreate()");
-
-        column1adapter = new FileListAdapter(
-                new ItemList(),
-                getContext()
-        );
-
-        column2adapter = new FileListNavigationAdapter(
-                new ItemList(),
-                (position, hasFocus) -> {
-                    Log.i("BrowserFragment", "RecyclerView: onItemFocusedListener called");
-                    if(hasFocus) {
-                        presenter.focus(position);
-                    }
-                },
-                position -> {
-                    Log.i("BrowserFragment", "RecyclerView: onItemClickListener called");
-//                    presenter.focus(position);
-                    mListener.openFullImage(position);
-                },
-                this,
-                getContext()
-        );
-
-        column3adapter = new FileListAdapter(
-                new ItemList(),
-                getContext()
-        );
     }
 
 
@@ -152,6 +129,39 @@ public class BrowserFragment
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+
+        presenter = new BrowserPresenter(
+                this,
+                mListener.getAppContainer().navigation,
+                mListener.getAppContainer().modification
+        );
+
+        column1adapter = new FileListAdapter(
+                new ItemList(),
+                getContext()
+        );
+
+        column2adapter = new FileListNavigationAdapter(
+                new ItemList(),
+                (position, hasFocus) -> {
+                    Log.i("BrowserFragment", "RecyclerView: onItemFocusedListener called");
+                    if(hasFocus) {
+                        presenter.focus(position);
+                    }
+                },
+                position -> {
+                    Log.i("BrowserFragment", "RecyclerView: onItemClickListener called");
+                    presenter.openFullImage(position);
+                },
+                this,
+                getContext()
+        );
+
+        column3adapter = new FileListAdapter(
+                new ItemList(),
+                getContext()
+        );
+
         column1view = view.findViewById(R.id.column_1);
         column2view = view.findViewById(R.id.column_2);
         column3view = view.findViewById(R.id.column_3);
@@ -177,15 +187,9 @@ public class BrowserFragment
     @Override
     public void onPause() {
         super.onPause();
-
     }
 
-    //Implemented BrowserContract methods----------------------------------------------------------
-    @Override
-    public void setPresenter(@NonNull BrowserContract.Presenter presenter) {
-        this.presenter = presenter;
-    }
-
+    //Implemented BrowserContract.View methods----------------------------------------------------------
     @Override
     public void setColumn1(ItemList column) {
         // TODO: check if column content exists, else display loading indicator
@@ -251,10 +255,16 @@ public class BrowserFragment
     }
 
     @Override
+    public void showFullImageView(ArrayList<String> list, int current) {
+        mListener.openFullImage(list, current);
+    }
+
+    @Override
     public boolean isActive() {
         return isAdded();
     }
 
+    //Implemented NavigationKeyHandler methods----------------------------------------------------------
     @Override
     public void left() {
         Log.i("BrowserFragment", "left()");
@@ -267,7 +277,10 @@ public class BrowserFragment
         presenter.toChild();
     }
 
+    //public interface implemented by containing activity------------------------------------------
     public interface OnFragmentInteractionListener {
-        void openFullImage(int position);
+        void openFullImage(ArrayList<String> list, int current);
+
+        AppContainer getAppContainer();
     }
 }

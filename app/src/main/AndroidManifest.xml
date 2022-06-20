@@ -2,38 +2,41 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
-        android:required="false"/>
+        android:required="false" />
     <uses-feature
         android:name="android.software.leanback"
-        android:required="false"/>
+        android:required="false" />
 
     <application
+        android:name=".android.MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
         android:banner="@drawable/banner"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="false"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="false"
-        android:name=".android.MyApplication"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <activity android:name=".android.ui.main.MainActivity"
+        <activity
+            android:name=".android.ui.full_image.FullImageActivity"
+            android:exported="false"
             android:screenOrientation="landscape"
-            android:exported="true">
+        />
+        <activity
+            android:name=".android.ui.browser.BrowserActivity"
+            android:exported="true"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

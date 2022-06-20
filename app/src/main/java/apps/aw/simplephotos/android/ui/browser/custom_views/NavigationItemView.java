@@ -1,4 +1,4 @@
-package apps.aw.simplephotos.android.ui.browser.customviews;
+package apps.aw.simplephotos.android.ui.browser.custom_views;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
-import apps.aw.simplephotos.android.Dpad;
+import apps.aw.simplephotos.android.dpad.Dpad;
 
 public class NavigationItemView extends LinearLayout {
 

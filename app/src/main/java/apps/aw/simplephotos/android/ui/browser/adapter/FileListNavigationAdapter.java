@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import apps.aw.simplephotos.R;
 import apps.aw.simplephotos.java.ItemList;
-import apps.aw.simplephotos.android.ui.browser.customviews.NavigationItemView;
+import apps.aw.simplephotos.android.ui.browser.custom_views.NavigationItemView;
 
 public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavigationAdapter.ViewHolder> {
 

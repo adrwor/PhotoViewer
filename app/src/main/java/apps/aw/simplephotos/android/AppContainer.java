@@ -5,10 +5,10 @@ import android.content.Context;
 import java.util.ArrayList;
 
 import apps.aw.simplephotos.android.storage.StoragePaths;
-import apps.aw.simplephotos.java.interactors.Navigation;
+import apps.aw.simplephotos.java.interactors.navigation.Navigation;
 import apps.aw.simplephotos.java.interactors.Modification;
-import apps.aw.simplephotos.java.interactors.ModificationInteractor;
-import apps.aw.simplephotos.java.interactors.NavigationInteractor;
+import apps.aw.simplephotos.java.interactors.tree.ModificationInteractor;
+import apps.aw.simplephotos.java.interactors.tree.TreeNavigationInteractor;
 import apps.aw.simplephotos.java.storagepaths.StoragePathProvider;
 import apps.aw.simplephotos.java.treenavigator.NodeData;
 import apps.aw.simplephotos.java.treenavigator.RootNode;
@@ -32,7 +32,7 @@ public class AppContainer {
         MainThread mainThread = new MainThreadImpl();
         StoragePathProvider storagePathProvider = new StoragePaths(context);
 
-        navigation = new NavigationInteractor(treeNavigator, executor, mainThread);
+        navigation = new TreeNavigationInteractor(treeNavigator, executor, mainThread);
         modification = new ModificationInteractor(rootNode, storagePathProvider, executor);
     }
 

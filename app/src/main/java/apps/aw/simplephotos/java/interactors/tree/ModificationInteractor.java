@@ -1,7 +1,8 @@
-package apps.aw.simplephotos.java.interactors;
+package apps.aw.simplephotos.java.interactors.tree;
 
 import java.io.File;
 
+import apps.aw.simplephotos.java.interactors.Modification;
 import apps.aw.simplephotos.java.storagepaths.StoragePath;
 import apps.aw.simplephotos.java.storagepaths.StoragePathProvider;
 import apps.aw.simplephotos.java.treenavigator.FileNode;

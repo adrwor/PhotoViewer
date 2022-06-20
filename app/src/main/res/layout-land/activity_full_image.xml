@@ -2,17 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".android.ui.browser.BrowserActivity">
-
+    tools:context=".android.ui.full_image.FullImageActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
+        android:name="apps.aw.simplephotos.android.ui.full_image.FullImageFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="apps.aw.simplephotos.android.ui.browser.BrowserFragment"/>
-
-
+        android:layout_height="match_parent" />
 </FrameLayout>

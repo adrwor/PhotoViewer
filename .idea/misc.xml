@@ -9,12 +9,19 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.11666666666666667" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1695" />
+        <entry key="app/src/main/res/drawable-xhdpi/item_background_color_states.xml" value="0.1495" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1695" />
+        <entry key="app/src/main/res/layout-land/activity_full_image.xml" value="0.18738977072310406" />
         <entry key="app/src/main/res/layout-land/activity_main.xml" value="0.19753086419753085" />
-        <entry key="app/src/main/res/layout-land/fragment_browser.xml" value="0.1" />
+        <entry key="app/src/main/res/layout-land/fragment_browser.xml" value="0.21" />
+        <entry key="app/src/main/res/layout-land/fragment_full_image.xml" value="0.1109375" />
+        <entry key="app/src/main/res/layout/activity_full_image.xml" value="0.11911231884057971" />
         <entry key="app/src/main/res/layout/file_list_view.xml" value="0.10260416666666666" />
         <entry key="app/src/main/res/layout/file_preview_details.xml" value="0.10989583333333333" />
         <entry key="app/src/main/res/layout/file_view.xml" value="0.121875" />
-        <entry key="app/src/main/res/layout/fragment_browser.xml" value="0.18541666666666667" />
+        <entry key="app/src/main/res/layout/fragment_browser.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_full_image.xml" value="0.1033434650455927" />
       </map>
     </option>
   </component>

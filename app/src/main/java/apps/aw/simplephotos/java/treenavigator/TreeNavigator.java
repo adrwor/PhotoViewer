@@ -19,7 +19,7 @@ public interface TreeNavigator {
 
     ItemList getParentItems();
 
-    ItemList getItems();
+    ItemList getItemList();
 
     Item getContentOfFocusedChild();
 

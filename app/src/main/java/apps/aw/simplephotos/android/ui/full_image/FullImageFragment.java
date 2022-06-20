@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.InputEvent;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,8 +19,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import apps.aw.simplephotos.R;
+import apps.aw.simplephotos.java.Image;
+import apps.aw.simplephotos.java.interactors.navigation.Navigation;
 import apps.aw.simplephotos.java.presenters.fullimage.FullImageContract;
-import apps.aw.simplephotos.java.treenavigator.FileNode;
 import apps.aw.simplephotos.java.presenters.fullimage.FullImagePresenter;
 
 /**
@@ -27,7 +29,11 @@ import apps.aw.simplephotos.java.presenters.fullimage.FullImagePresenter;
  * Use the {@link FullImageFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FullImageFragment extends Fragment implements FullImageContract.View {
+public class FullImageFragment
+        extends Fragment
+        implements FullImageContract.View {
+
+    private static final String TAG = "FullImageFragment";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -87,8 +93,6 @@ public class FullImageFragment extends Fragment implements FullImageContract.Vie
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        //Create the presenter (or let it inject by activity? What does that mean?)
-        presenter = new FullImagePresenter(this);
     }
 
     @Override
@@ -103,6 +107,9 @@ public class FullImageFragment extends Fragment implements FullImageContract.Vie
         //get some important views
         fullImageView = view.findViewById(R.id.imageView3);
         imageInfo = view.findViewById(R.id.textView5);
+
+        // get the Navigator from the activity (don't create it ourselves)
+        presenter = new FullImagePresenter(this, mListener.getNavigation());
 
         //set onGenericMotionListener on view for e.g. Dpad navigation (go forward/backwards)
         view.setOnGenericMotionListener(new View.OnGenericMotionListener() {
@@ -134,23 +141,24 @@ public class FullImageFragment extends Fragment implements FullImageContract.Vie
 
     }
 
-    //public member methods (for communication)----------------------------------------------------
 
-    /**
-     * Called by activity to display an image in the fragments imageview.
-     * @param img an ImageFile object
-     */
-    public void updateImageView(FileNode img) {
-        Glide.with(this).load(img.getFile()).into(fullImageView);
-        imageInfo.setText("put info of img here");
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.initialize();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
     //implemented contract interface methods-------------------------------------------------------
 
     @Override
-    public void setFullImage(FileNode img) {
+    public void setFullImage(Image img) {
         //load image
+        Log.i(TAG, "setFullImage: " + img.getFile().toString());
         Glide.with(this).load(img.getFile()).into(fullImageView);
     }
 
@@ -161,20 +169,9 @@ public class FullImageFragment extends Fragment implements FullImageContract.Vie
 
 
     //public interface implemented by containing activity------------------------------------------
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
 
-        boolean onInputEvent(View view, InputEvent inputEvent);
+        Navigation getNavigation();
     }
 
 

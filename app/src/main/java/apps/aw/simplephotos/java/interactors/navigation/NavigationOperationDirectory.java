@@ -1,4 +1,4 @@
-package apps.aw.simplephotos.java.interactors;
+package apps.aw.simplephotos.java.interactors.navigation;
 
 public class NavigationOperationDirectory extends NavigationOperation {
     public Direction direction;
@@ -8,7 +8,8 @@ public class NavigationOperationDirectory extends NavigationOperation {
     }
 
     public enum Direction {
-        UP,
-        DOWN
+        NEUTRAL,
+        PARENT,
+        CHILD
     }
 }

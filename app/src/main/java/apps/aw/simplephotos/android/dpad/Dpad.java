@@ -1,4 +1,4 @@
-package apps.aw.simplephotos.android;
+package apps.aw.simplephotos.android.dpad;
 
 import android.util.Log;
 import android.view.InputDevice;

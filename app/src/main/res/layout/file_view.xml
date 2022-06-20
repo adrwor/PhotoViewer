@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<apps.aw.simplephotos.android.ui.browser.customviews.NavigationItemView xmlns:android="http://schemas.android.com/apk/res/android"
+<apps.aw.simplephotos.android.ui.browser.custom_views.NavigationItemView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="40dp"
@@ -20,4 +20,4 @@
         android:text="FileName"
         android:duplicateParentState="true"
         android:textColor="@color/item_text_color_states" />
-</apps.aw.simplephotos.android.ui.browser.customviews.NavigationItemView>
+</apps.aw.simplephotos.android.ui.browser.custom_views.NavigationItemView>

@@ -1,13 +1,11 @@
-package apps.aw.simplephotos.java.interactors;
-
-import apps.aw.simplephotos.java.ViewData;
+package apps.aw.simplephotos.java.interactors.navigation;
 
 public interface Navigation {
 
     void execute(NavigationOperation navigationOperation, Callback callback);
 
     interface Callback {
-        void onSuccess(ViewData viewData);
+        void onSuccess(Object object);
         void onError();
     }
 }

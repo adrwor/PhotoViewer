@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 /**
  * This provides methods to help Activities load their UI.
  */
-public class ActivityTransactions {
+public class FragmentTransactions {
     /**
      * The {@code fragment} is added to the container view with id {@code frameId}. The operation is
      * performed by the {@code fragmentManager}.
