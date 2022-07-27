@@ -2,16 +2,17 @@ package apps.aw.simplephotos.java.interactors.tree;
 
 import java.util.ArrayList;
 
+import apps.aw.simplephotos.java.Action;
 import apps.aw.simplephotos.java.FileListWithIndex;
 import apps.aw.simplephotos.java.Image;
 import apps.aw.simplephotos.java.Item;
 import apps.aw.simplephotos.java.ViewData;
 import apps.aw.simplephotos.java.interactors.Interactor;
-import apps.aw.simplephotos.java.interactors.navigation.Navigation;
-import apps.aw.simplephotos.java.interactors.navigation.NavigationOperation;
-import apps.aw.simplephotos.java.interactors.navigation.NavigationOperationDirectory;
-import apps.aw.simplephotos.java.interactors.navigation.NavigationOperationFocus;
-import apps.aw.simplephotos.java.interactors.navigation.NavigationOperationOpen;
+import apps.aw.simplephotos.java.interactors.shared.Navigation;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperation;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperationDirectory;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperationFocus;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperationOpen;
 import apps.aw.simplephotos.java.treenavigator.TreeNavigator;
 import apps.aw.simplephotos.java.executor.Executor;
 import apps.aw.simplephotos.java.executor.MainThread;
@@ -103,36 +104,44 @@ public class TreeNavigationInteractor implements Interactor, Navigation {
             });
         }
         else if(navigationOperation instanceof NavigationOperationOpen) {
-            boolean error = false;
-            Item item = treeNavigator.getContentOfFocusedChild();
+            Item currentItem = treeNavigator.getContentOfFocusedChild();
             FileListWithIndex fileListWithIndex = null;
-            if(!(item instanceof Image)) {
-                error = true;
-            } else {
-                // TODO: this may not be ideal, because not all items in treeNavigator.getItemList()
-                //      are images, and therefore we cannot see all of them
-                //  Furthermore, it would be nice to have an argument in the NavigationOperationOpen
+            if(currentItem instanceof Image) {
+                // TODO: it would be nice to have an argument in the NavigationOperationOpen
                 //      object which specifies which images we want to see, e.g. only the current folder,
                 //      or all images in all subfolders etc.
-                // TODO: this is only temporary!!!! (fileList contains only currently focused image!!!)
                 ArrayList<String> fileList = new ArrayList<>();
-                fileList.add(((Image)(treeNavigator.getContentOfFocusedChild())).getFile().getAbsolutePath());
-                fileListWithIndex = new FileListWithIndex(
-                        fileList,
-                        0
-                );
-            }
-            final boolean finalError = error;
-            final FileListWithIndex finalFileListWithIndex = fileListWithIndex;
-            mainThread.post(new Runnable() {
-                @Override public void run() {
-                    if(finalError) {
-                        callback.onError();
-                    } else {
+                int currentImageIndex = 0;
+                int i = 0;
+                for (Item item: treeNavigator.getContentOfImageChildren()) {
+                    String path = ((Image)item).getFile().getAbsolutePath();
+                    if(path.equals(((Image)currentItem).getFile().getAbsolutePath())) {
+                        currentImageIndex = i;
+                    }
+                    fileList.add(((Image)item).getFile().getAbsolutePath());
+                    i++;
+                }
+                fileListWithIndex = new FileListWithIndex(fileList, currentImageIndex);
+                final FileListWithIndex finalFileListWithIndex = fileListWithIndex;
+                mainThread.post(new Runnable() {
+                    @Override public void run() {
                         callback.onSuccess(finalFileListWithIndex);
                     }
-                }
-            });
+                });
+            }
+            else if(currentItem instanceof Action) {
+                mainThread.post(new Runnable() {
+                    @Override public void run() {
+                        callback.onSuccess(((Action) currentItem).action);
+                    }
+                });
+            } else {
+                mainThread.post(new Runnable() {
+                    @Override public void run() {
+                        callback.onError();
+                    }
+                });
+            }
         }
     }
 }

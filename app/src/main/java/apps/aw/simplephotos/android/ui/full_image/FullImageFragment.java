@@ -2,25 +2,23 @@ package apps.aw.simplephotos.android.ui.full_image;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
-import android.view.InputEvent;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
 
 import apps.aw.simplephotos.R;
+import apps.aw.simplephotos.android.dpad.Dpad;
 import apps.aw.simplephotos.java.Image;
-import apps.aw.simplephotos.java.interactors.navigation.Navigation;
+import apps.aw.simplephotos.java.interactors.shared.Navigation;
 import apps.aw.simplephotos.java.presenters.fullimage.FullImageContract;
 import apps.aw.simplephotos.java.presenters.fullimage.FullImagePresenter;
 
@@ -111,31 +109,43 @@ public class FullImageFragment
         // get the Navigator from the activity (don't create it ourselves)
         presenter = new FullImagePresenter(this, mListener.getNavigation());
 
+//        ((NavigationFullImageView) view).setKeyPressHandler(this);
+
+//        boolean tookFocus = view.requestFocus();
+
+//        Log.i(TAG, "tookFokus: " + tookFocus);
         //set onGenericMotionListener on view for e.g. Dpad navigation (go forward/backwards)
-        view.setOnGenericMotionListener(new View.OnGenericMotionListener() {
-            @Override
-            public boolean onGenericMotion(View view, MotionEvent motionEvent) {
-                //TODO: use Dpad class to handle the event, then call appropriate presenter method
-                //e.g. fullImageNext() or fullImagePrevious
-                presenter.fullImageNext();
-                //or:
-                presenter.fullImagePrevious();
-                //etc
-                return true;    //consume event?
-            }
-        });
+//        view.setOnGenericMotionListener(new View.OnGenericMotionListener() {
+//            @Override
+//            public boolean onGenericMotion(View view, MotionEvent motionEvent) {
+//                //TODO: use Dpad class to handle the event, then call appropriate presenter method
+//                //e.g. fullImageNext() or fullImagePrevious
+//                presenter.fullImageNext();
+//                //or:
+//                presenter.fullImagePrevious();
+//                //etc
+//                return true;    //consume event?
+//            }
+//        });
 
         //set onKeyListener
+        Log.i(TAG, "onViewCreated()");
         view.setOnKeyListener(new View.OnKeyListener() {
+
+
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                //TODO: use Dpad class to handle the event, then call appropriate presenter method
-                //e.g. fullImageNext() or fullImagePrevious
-                presenter.fullImageNext();
-                //or:
-                presenter.fullImagePrevious();
-                //etc
-                return true;    //consume event?
+                if(keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (Dpad.getDirectionPressed(keyEvent)) {
+                        case Dpad.LEFT:
+                        presenter.fullImagePrevious();
+                        return true;
+                        case Dpad.RIGHT:
+                        presenter.fullImageNext();
+                        return true;
+                    }
+                }
+                return false;  //do not consume event?
             }
         });
 
@@ -166,7 +176,6 @@ public class FullImageFragment
     public void setEndOfListImage(Object obj) {
 
     }
-
 
     //public interface implemented by containing activity------------------------------------------
     public interface OnFragmentInteractionListener {

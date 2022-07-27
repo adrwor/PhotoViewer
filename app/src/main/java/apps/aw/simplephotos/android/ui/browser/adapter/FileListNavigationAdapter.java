@@ -76,9 +76,10 @@ public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavi
                 }
         );
         holder.view.setOnClickListener(v -> {
-            if(v.hasFocus()) {
-                itemClickListener.onItemClick(p);
-            }
+            itemClickListener.onItemClick(p);
+//            if(v.hasFocus()) { // is it necessary to check this?
+//                itemClickListener.onItemClick(p);
+//            }
         });
         holder.view.setKeyPressHandler(navigationKeyHandler);
         if(position == itemList.getFocus()) {

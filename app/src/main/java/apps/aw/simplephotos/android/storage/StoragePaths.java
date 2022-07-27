@@ -2,14 +2,13 @@ package apps.aw.simplephotos.android.storage;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import apps.aw.simplephotos.java.storagepaths.StoragePath;
-import apps.aw.simplephotos.java.storagepaths.StoragePathProvider;
+import apps.aw.simplephotos.java.storagepath.StoragePath;
+import apps.aw.simplephotos.java.storagepath.StoragePathProvider;
 
 public class StoragePaths implements StoragePathProvider {
 
@@ -17,10 +16,9 @@ public class StoragePaths implements StoragePathProvider {
 
     public StoragePaths(Context context) {
         this.storagePaths = new ArrayList<>();
-        storagePaths.add(new StoragePath(context.getFilesDir(), "InternalDeviceStorage"));
-        storagePaths.add(new StoragePath(Environment.getExternalStorageDirectory(), "ExternalStorageDirectory"));
-        storagePaths.add(new StoragePath(new File("storage"), "storage"));
-        storagePaths.add(new StoragePath(new File("storage/emulated/0"), "storage/emulated/0"));
+        storagePaths.add(new StoragePath(Environment.getExternalStorageDirectory(), "storage/emulated/0"));
+        storagePaths.add(new StoragePath(new File("/"), "/"));
+//        storagePaths.add(new StoragePath(new File("/mnt/media_rw/"), "/mnt/media_rw/"));
 
     }
 

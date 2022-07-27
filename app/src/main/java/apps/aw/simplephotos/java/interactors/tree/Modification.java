@@ -1,12 +1,10 @@
-package apps.aw.simplephotos.java.interactors;
-
-import java.io.File;
-
-import apps.aw.simplephotos.java.storagepaths.StoragePathProvider;
+package apps.aw.simplephotos.java.interactors.tree;
 
 public interface Modification {
 
     void initialize();
+
+    void addSubRoot(String path);
 
     // TODO: maybe add more functions to modify the Tree (adding/removing parts of the tree)
 }

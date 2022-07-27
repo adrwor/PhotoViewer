@@ -1,4 +1,4 @@
-package apps.aw.simplephotos.java.storagepaths;
+package apps.aw.simplephotos.java.storagepath;
 
 import java.util.List;
 

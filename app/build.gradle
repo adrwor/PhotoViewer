@@ -4,7 +4,7 @@ android {
     compileSdkVersion 32
     defaultConfig {
         applicationId "apps.aw.simplephotos"
-        minSdk 23
+        minSdk 21
         targetSdkVersion 32
         versionCode 1
         versionName "1.0"

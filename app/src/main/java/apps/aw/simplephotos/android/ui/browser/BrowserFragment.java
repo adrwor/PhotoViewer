@@ -1,12 +1,24 @@
 package apps.aw.simplephotos.android.ui.browser;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.leanback.widget.VerticalGridView;
 
+import android.provider.DocumentsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +32,8 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import apps.aw.simplephotos.android.AppContainer;
+import apps.aw.simplephotos.android.ui.ActivityNavigation;
+import apps.aw.simplephotos.java.Action;
 import apps.aw.simplephotos.java.Path;
 import apps.aw.simplephotos.java.presenters.browser.BrowserContract;
 import apps.aw.simplephotos.R;
@@ -71,6 +85,33 @@ public class BrowserFragment
     FileListAdapter column1adapter;
     FileListNavigationAdapter column2adapter;
     FileListAdapter column3adapter;
+
+    ActivityResultLauncher<Uri> activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.OpenDocumentTree(),
+                new ActivityResultCallback<Uri>() {
+                    @Override
+                    public void onActivityResult(Uri result) {
+                        // The result is a URI for the document or directory that
+                        // the user selected.
+                        if (result != null) {
+                            // Perform operations on the document using its URI.
+                            String uriPath = result.getPath();
+                            Log.i(TAG, "uriPath: " + uriPath);
+                            String[] pathParts = uriPath.split(":")[0].split("/");
+                            String name = pathParts[pathParts.length-1];
+
+                            presenter.addSubRoot("/storage/" + name);
+                            presenter.addSubRoot("/mnt/media_rw/" + name);
+
+                            // TODO: use this somehow or something similar
+                            DocumentFile.fromTreeUri(getContext(), result);
+                            DocumentsContract.buildChildDocumentsUriUsingTree(result, "");
+
+                        }
+                    }
+                }
+        );
+
 
     /**
      * Use this factory method to create a new instance of
@@ -151,7 +192,7 @@ public class BrowserFragment
                 },
                 position -> {
                     Log.i("BrowserFragment", "RecyclerView: onItemClickListener called");
-                    presenter.openFullImage(position);
+                    presenter.open(position);
                 },
                 this,
                 getContext()
@@ -182,6 +223,8 @@ public class BrowserFragment
     public void onResume() {
         super.onResume();
         presenter.initialize();
+        boolean focused = column2view.requestFocus();
+        Log.i(TAG, "focused: " + focused);
     }
 
     @Override
@@ -189,13 +232,12 @@ public class BrowserFragment
         super.onPause();
     }
 
-    //Implemented BrowserContract.View methods----------------------------------------------------------
     @Override
     public void setColumn1(ItemList column) {
         // TODO: check if column content exists, else display loading indicator
         Log.i(TAG, "setFileListSelection for column 1");
         column1adapter.setFileListSelection(column);
-        setColumn1Focus(column.getFocus()); // TODO: is this necessary? (focus is already contained in the fileList object?)
+//        setColumn1Focus(column.getFocus()); // TODO: is this necessary? (focus is already contained in the fileList object?)
     }
 
     private void setColumn1Focus(int index) {
@@ -228,6 +270,11 @@ public class BrowserFragment
             preview.setVisibility(View.GONE);
             setColumn3List((ItemList) item);
         }
+        else if(item instanceof Action) {
+            column3view.setVisibility(View.VISIBLE);
+            preview.setVisibility(View.GONE);
+            setColumn3List(ItemList.emptyItemList());
+        }
     }
 
     private void setColumn3Focus(int index) {
@@ -251,7 +298,7 @@ public class BrowserFragment
 
     @Override
     public void setPath(Path path) {
-        this.pathView.setText(path.parentPath + "/" + path.name);
+        this.pathView.setText(path.parentPath + path.name);
     }
 
     @Override
@@ -260,11 +307,16 @@ public class BrowserFragment
     }
 
     @Override
+    public void openSystemFilePicker() {
+//        ActivityNavigation.openSystemFilePicker(getContext());
+        activityResultLauncher.launch(null);
+    }
+
+    @Override
     public boolean isActive() {
         return isAdded();
     }
 
-    //Implemented NavigationKeyHandler methods----------------------------------------------------------
     @Override
     public void left() {
         Log.i("BrowserFragment", "left()");
@@ -277,10 +329,8 @@ public class BrowserFragment
         presenter.toChild();
     }
 
-    //public interface implemented by containing activity------------------------------------------
     public interface OnFragmentInteractionListener {
         void openFullImage(ArrayList<String> list, int current);
-
         AppContainer getAppContainer();
     }
 }

@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorFullImageDarkBackground"
+    android:id="@+id/full_image_fragment"
+    android:focusable="true"
     tools:context=".android.ui.full_image.FullImageFragment">
 
     <ImageView

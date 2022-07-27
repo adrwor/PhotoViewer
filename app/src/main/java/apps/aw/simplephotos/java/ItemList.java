@@ -21,6 +21,10 @@ public class ItemList extends Item {
         this.focus = focus;
     }
 
+    public static ItemList emptyItemList() {
+        return new ItemList();
+    }
+
     public int getListSize() {
         return fileList.size();
     }

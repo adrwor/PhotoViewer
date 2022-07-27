@@ -1,7 +1,5 @@
 package apps.aw.simplephotos.java.presenters;
 
-import apps.aw.simplephotos.java.storagepaths.StoragePathProvider;
-
 public interface BasePresenter {
 
     //TODO: replace the start() and stop() above with these new functions:

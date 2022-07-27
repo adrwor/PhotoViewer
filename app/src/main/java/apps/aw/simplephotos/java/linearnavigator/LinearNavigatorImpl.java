@@ -23,7 +23,7 @@ public class LinearNavigatorImpl implements LinearNavigator {
 
     @Override
     public boolean next() {
-        if(index + 1 < paths.size()) {
+        if(index < paths.size() - 1) {
             index++;
             return true;
         }
@@ -32,7 +32,7 @@ public class LinearNavigatorImpl implements LinearNavigator {
 
     @Override
     public boolean previous() {
-        if(index - 1 > 0) {
+        if(index > 0) {
             index--;
             return true;
         }

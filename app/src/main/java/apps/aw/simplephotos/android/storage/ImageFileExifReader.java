@@ -4,8 +4,14 @@ import androidx.exifinterface.media.ExifInterface;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-public class ImageFileExifReader {
+import apps.aw.simplephotos.java.treenavigator.FileMetaData;
+import apps.aw.simplephotos.java.treenavigator.FileMetaDataReader;
+
+public class ImageFileExifReader implements FileMetaDataReader {
 
     //contains valid suffixes
     private static String[] extensions = {"jpg", "jpeg", "png", "gif", "webp"};
@@ -53,16 +59,23 @@ public class ImageFileExifReader {
      * @param imageFile The image file.
      * @return The date for TAG_DATETIME_ORIGINAL
      */
-    public static String getExifData(File imageFile) {
-        String date = "";
+    public static String getExifDateTime(File imageFile) {
+        String dateTimeString = "";
         try {
             ExifInterface exifInterface = new ExifInterface(imageFile);
-            date = exifInterface.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL);
+            dateTimeString = exifInterface.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL);
         }
         catch (IOException e) {
-
+            return "";
         }
-        return date;
+        return dateTimeString;
+    }
+
+    @Override
+    public FileMetaData readFileMetaData(File file) {
+        FileMetaData fileMetaData = new FileMetaData();
+        fileMetaData.originalDateTime = getExifDateTime(file);
+        return fileMetaData;
     }
 
 

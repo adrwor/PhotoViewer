@@ -3,11 +3,9 @@ package apps.aw.simplephotos.java.interactors.linear;
 import apps.aw.simplephotos.java.executor.Executor;
 import apps.aw.simplephotos.java.executor.MainThread;
 import apps.aw.simplephotos.java.interactors.Interactor;
-import apps.aw.simplephotos.java.interactors.navigation.Navigation;
-import apps.aw.simplephotos.java.interactors.navigation.NavigationOperation;
-import apps.aw.simplephotos.java.interactors.navigation.NavigationOperationDirection;
-import apps.aw.simplephotos.java.interactors.navigation.NavigationOperationDirectory;
-import apps.aw.simplephotos.java.interactors.navigation.NavigationOperationFocus;
+import apps.aw.simplephotos.java.interactors.shared.Navigation;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperation;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperationDirection;
 import apps.aw.simplephotos.java.linearnavigator.LinearNavigator;
 
 public class LinearNavigationInteractor implements Interactor, Navigation {

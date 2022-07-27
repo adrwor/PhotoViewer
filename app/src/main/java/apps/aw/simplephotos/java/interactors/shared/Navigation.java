@@ -1,4 +1,4 @@
-package apps.aw.simplephotos.java.interactors.navigation;
+package apps.aw.simplephotos.java.interactors.shared;
 
 public interface Navigation {
 

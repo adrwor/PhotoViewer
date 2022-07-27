@@ -2,13 +2,11 @@ package apps.aw.simplephotos.java.presenters.browser;
 
 import java.util.ArrayList;
 
-import apps.aw.simplephotos.java.Image;
 import apps.aw.simplephotos.java.Item;
 import apps.aw.simplephotos.java.ItemList;
 import apps.aw.simplephotos.java.Path;
 import apps.aw.simplephotos.java.presenters.BasePresenter;
 import apps.aw.simplephotos.java.presenters.BaseView;
-import apps.aw.simplephotos.java.storagepaths.StoragePathProvider;
 
 public interface BrowserContract {
 
@@ -45,6 +43,8 @@ public interface BrowserContract {
          */
         void showFullImageView(ArrayList<String> list, int current);
 
+        void openSystemFilePicker();
+
         /**
          * True if view is active.
          * @return true if view is active
@@ -72,9 +72,11 @@ public interface BrowserContract {
         void toChild();
 
         /**
-         * Called when user wants to see an image in fullscreen
+         * Called when user pressed enter on this item
          */
-        void openFullImage(int index);
+        void open(int index);
+
+        void addSubRoot(String path);
 
     }
 

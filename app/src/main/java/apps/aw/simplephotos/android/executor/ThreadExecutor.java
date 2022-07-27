@@ -39,7 +39,7 @@ public class ThreadExecutor implements Executor {
             throw new IllegalArgumentException("Interactor to execute can't be null");
         }
         interactor.run(); // TODO: for testing purposes, run directly
-        // TODO: for concurrency, use the following instead
+        // TODO: for concurrency, use the following instead:
 //        threadPoolExecutor.submit(new Runnable() {
 //            @Override public void run() {
 //                interactor.run();

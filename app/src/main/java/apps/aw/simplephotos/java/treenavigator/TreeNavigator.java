@@ -1,5 +1,7 @@
 package apps.aw.simplephotos.java.treenavigator;
 
+import java.util.List;
+
 import apps.aw.simplephotos.java.Item;
 import apps.aw.simplephotos.java.ItemList;
 import apps.aw.simplephotos.java.Path;
@@ -24,4 +26,6 @@ public interface TreeNavigator {
     Item getContentOfFocusedChild();
 
     Path getPathOfFocusedChild();
+
+    List<Item> getContentOfImageChildren();
 }

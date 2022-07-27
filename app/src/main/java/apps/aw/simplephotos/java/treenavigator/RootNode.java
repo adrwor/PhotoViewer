@@ -43,4 +43,9 @@ public class RootNode implements NodeData {
 
     @Override
     public void setChangeDate(LocalDateTime date) { }
+
+    @Override
+    public int compareTo(NodeData o) {
+        return -1; // Always on top
+    }
 }

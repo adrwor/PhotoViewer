@@ -3,12 +3,12 @@ package apps.aw.simplephotos.java.presenters.browser;
 import android.util.Log;
 
 import apps.aw.simplephotos.java.FileListWithIndex;
-import apps.aw.simplephotos.java.interactors.navigation.Navigation;
-import apps.aw.simplephotos.java.interactors.Modification;
-import apps.aw.simplephotos.java.interactors.navigation.NavigationOperationDirectory;
-import apps.aw.simplephotos.java.interactors.navigation.NavigationOperationFocus;
+import apps.aw.simplephotos.java.interactors.shared.Navigation;
+import apps.aw.simplephotos.java.interactors.tree.Modification;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperationDirectory;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperationFocus;
 import apps.aw.simplephotos.java.ViewData;
-import apps.aw.simplephotos.java.interactors.navigation.NavigationOperationOpen;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperationOpen;
 
 public class BrowserPresenter implements BrowserContract.Presenter {
 
@@ -160,8 +160,8 @@ public class BrowserPresenter implements BrowserContract.Presenter {
     }
 
     @Override
-    public void openFullImage(int index) {
-        Log.i(TAG, "openFullImage()");
+    public void open(int index) {
+        Log.i(TAG, "enter()");
         navigation.execute(
                 // TODO: provide a special sub-class which specifies that an image should be opened
                 //  the navigation then decides if it is successful or not
@@ -169,19 +169,41 @@ public class BrowserPresenter implements BrowserContract.Presenter {
                 new Navigation.Callback() {
                     @Override
                     public void onSuccess(Object object) {
-                        assert(object instanceof FileListWithIndex);
-                        FileListWithIndex fileListWithIndex = (FileListWithIndex)object;
-                        // TODO: how do we calculate the index of the current image?
-                        //  this could be difficult, because there can be folders and other non-images
-                        //  in column2, which we do not want to have in the list.
-                        //  Possible solution: in the NavigationOoperationOpen, find all images,
-                        //  recalculate the index of the current image, and return it
-                        //  (instead of just re-using the ViewData object for this purpose)
-                        view.showFullImageView(fileListWithIndex.list, fileListWithIndex.index);
-
+                        if(object instanceof FileListWithIndex) { // TODO:  create explicit types to distinguish between these callbacks
+                            FileListWithIndex fileListWithIndex = (FileListWithIndex)object;
+                            view.showFullImageView(fileListWithIndex.list, fileListWithIndex.index);
+                        } else if (object instanceof Integer) { // TODO:  create explicit types to distinguish between these callbacks
+                            view.openSystemFilePicker();
+                        }
                     }
                     @Override
                     public void onError() { }
+                }
+        );
+    }
+
+    @Override
+    public void addSubRoot(String path) {
+        Log.i(TAG, "addSubRoot: " + path);
+        modification.addSubRoot(path);
+        navigation.execute(
+                new NavigationOperationDirectory(NavigationOperationDirectory.Direction.NEUTRAL),
+                new Navigation.Callback() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        assert(object instanceof ViewData);
+                        ViewData viewData = (ViewData)object;
+                        view.setColumn1(viewData.column1);
+                        view.setColumn2(viewData.column2);
+                        view.setColumn3(viewData.item);
+                        view.setPath(viewData.path);
+                    }
+
+                    @Override
+                    public void onError() {
+                        Log.i(TAG, "start: error!!!!!!!!!");
+                        // TODO: show error
+                    }
                 }
         );
     }

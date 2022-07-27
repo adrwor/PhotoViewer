@@ -1,11 +1,10 @@
 package apps.aw.simplephotos.java.presenters.fullimage;
 
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import apps.aw.simplephotos.java.Image;
-import apps.aw.simplephotos.java.interactors.navigation.Navigation;
-import apps.aw.simplephotos.java.interactors.navigation.NavigationOperationDirection;
+import apps.aw.simplephotos.java.interactors.shared.Navigation;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperationDirection;
 
 public class FullImagePresenter implements FullImageContract.Presenter {
 

@@ -2,14 +2,14 @@ package apps.aw.simplephotos.java.interactors.tree;
 
 import java.io.File;
 
-import apps.aw.simplephotos.java.interactors.Modification;
-import apps.aw.simplephotos.java.storagepaths.StoragePath;
-import apps.aw.simplephotos.java.storagepaths.StoragePathProvider;
+import apps.aw.simplephotos.java.actions.Actions;
+import apps.aw.simplephotos.java.storagepath.StoragePath;
+import apps.aw.simplephotos.java.storagepath.StoragePathProvider;
+import apps.aw.simplephotos.java.treenavigator.ActionNode;
 import apps.aw.simplephotos.java.treenavigator.FileNode;
 import apps.aw.simplephotos.java.treenavigator.NodeData;
 import apps.aw.simplephotos.java.treenavigator.tree.Node;
 import apps.aw.simplephotos.java.executor.Executor;
-import apps.aw.simplephotos.android.storage.StoragePaths;
 
 public class ModificationInteractor implements Modification {
 
@@ -30,12 +30,17 @@ public class ModificationInteractor implements Modification {
     public void initialize() {
         if (!isInitialized()) {
             for(StoragePath path : storagePathProvider.getPaths()) {
-                rootNode.addChildWithData(
-                        new FileNode(path.path, path.name)
-                );
+                rootNode.addChildWithData(new FileNode(path.path, path.name));
             }
+            rootNode.addChildWithData(new ActionNode("+", Actions.OPEN_SYSTEM_FILE_PICKER));
             isInitialized = true;
         }
+    }
+
+    @Override
+    public void addSubRoot(String path) {
+        // this should insert the path at the second-last position (so that the "+" is always last)
+        rootNode.addChildWithData(new FileNode(new File(path), path), rootNode.getChildren().size() - 1);
     }
 
     Boolean isInitialized() {

@@ -2,7 +2,7 @@ package apps.aw.simplephotos.java.treenavigator;
 
 import java.time.LocalDateTime;
 
-public interface NodeData {
+public interface NodeData extends Comparable<NodeData> {
 
     int getFocus();
 

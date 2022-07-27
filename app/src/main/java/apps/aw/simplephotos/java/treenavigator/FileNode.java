@@ -1,14 +1,12 @@
 package apps.aw.simplephotos.java.treenavigator;
 
-import androidx.annotation.NonNull;
-
 import java.io.File;
 import java.time.LocalDateTime;
 
 /**
  * Class which represents a directory, i.e. it stores an absolute path.
  */
-public class FileNode implements Comparable<FileNode>, NodeData {
+public class FileNode implements NodeData {
 
     private final File file;      // file
     private String name;  // displayed name, usually the name of the file
@@ -55,7 +53,6 @@ public class FileNode implements Comparable<FileNode>, NodeData {
         focus = index;
     }
 
-    @NonNull
     @Override
     public String toString() {
         return name;
@@ -71,9 +68,19 @@ public class FileNode implements Comparable<FileNode>, NodeData {
 
     }
 
-    @Override
-    public int compareTo(FileNode fileNode) {
+
+    private int compareToOtherFileNode(FileNode fileNode) {
         // TODO: enable multiple different comparison attributes (e.g. name, date, size, ...)
         return this.fileMetaData.compareTo(fileNode.getMetaData());
+    }
+
+    @Override
+    public int compareTo(NodeData o) {
+        if (o instanceof FileNode) {
+            return this.compareToOtherFileNode((FileNode) o);
+        }
+        else {
+            return 1; // FileNodes should come after every other NodeData type
+        }
     }
 }

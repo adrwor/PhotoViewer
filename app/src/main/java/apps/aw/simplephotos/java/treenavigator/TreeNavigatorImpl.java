@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import apps.aw.simplephotos.java.Action;
 import apps.aw.simplephotos.java.Item;
 import apps.aw.simplephotos.java.ItemList;
 import apps.aw.simplephotos.java.Image;
@@ -24,10 +25,12 @@ public class TreeNavigatorImpl implements TreeNavigator {
     //      -> do we even need a tree? Or can we just access the files as we visit them?
 
     private final Node<NodeData> root;
+    private final FileMetaDataReader fileMetaDataReader;
     private Node<NodeData> currentNode;
 
-    public TreeNavigatorImpl(Node<NodeData> root) {
+    public TreeNavigatorImpl(Node<NodeData> root, FileMetaDataReader fileMetaDataReader) {
         this.root =  root; // new Node<>(null, new ArrayList<>(), new RootNode("Root"));
+        this.fileMetaDataReader = fileMetaDataReader;
         currentNode = root;
     }
 
@@ -76,16 +79,21 @@ public class TreeNavigatorImpl implements TreeNavigator {
         if(childNode == null) {
             return null;
         } else {
-            assert(childNode.getData() instanceof FileNode);
-            FileNode childData = (FileNode)childNode.getData();
-            if(childData.isDirectory()) {
-                return getFileListOfNode(childNode);
-            }
-            else {
-                return new Image(childData.getFile(), "date"); // TODO: read correct date for this image
+            NodeData childNodeData = childNode.getData();
+            if (childNodeData instanceof FileNode) {
+                FileNode childData = (FileNode)childNode.getData();
+                if(childData.isDirectory()) {
+                    return getFileListOfNode(childNode);
+                }
+                else {
+                    return new Image(childData.getFile(), "date"); // TODO: read correct date for this image
+                }
+            } else if (childNodeData instanceof ActionNode) {
+                return new Action(((ActionNode)childNodeData).action);
             }
         }
 
+        return ItemList.emptyItemList();
     }
 
     public Path getPathOfFocusedChild() {
@@ -95,15 +103,27 @@ public class TreeNavigatorImpl implements TreeNavigator {
         } else {
             if(focusedChildNode.getData() instanceof FileNode) {
                 File file = ((FileNode)focusedChildNode.getData()).getFile();
-                if(file.getParentFile() != null) {
-                    return new Path(file.getParentFile().getAbsolutePath(), file.getName());
-                } else {
-                    return new Path(file.getName());
-                }
+                return new Path("", file.getAbsolutePath());
             } else {
                 return new Path(focusedChildNode.getData().toString());
             }
         }
+    }
+
+    @Override
+    public List<Item> getContentOfImageChildren() {
+        List<Node<NodeData>> children = currentNode.getChildren();
+        List<Item> resultList = new ArrayList<>();
+        for (Node<NodeData> child: children) {
+            if(child != null) {
+                assert(child.getData() instanceof FileNode); // just make sure its not the rootNode
+                FileNode data = (FileNode)child.getData();
+                if(!data.isDirectory()) {
+                    resultList.add(new Image(data.getFile(), "date"));
+                }
+            }
+        }
+        return resultList;
     }
 
     private Node<NodeData> getFocusedChildNode() {
@@ -148,7 +168,8 @@ public class TreeNavigatorImpl implements TreeNavigator {
         assert(node.getData().isDirectory());
         FileNode data = (FileNode)node.getData();
         List<FileNode> subfiles;
-        subfiles = FileSystemReader.getFileNodeList(data.getFile());
+        FileSystemReader fileSystemReader = new FileSystemReader(fileMetaDataReader);
+        subfiles = fileSystemReader.getFileNodeList(data.getFile());
         node.setChildren(new ArrayList<>());
         for (FileNode fileNode : subfiles) {
             node.addChildWithData(fileNode);
