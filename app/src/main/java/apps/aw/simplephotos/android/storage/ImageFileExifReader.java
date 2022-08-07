@@ -4,9 +4,6 @@ import androidx.exifinterface.media.ExifInterface;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import apps.aw.simplephotos.java.treenavigator.FileMetaData;
 import apps.aw.simplephotos.java.treenavigator.FileMetaDataReader;
@@ -14,14 +11,14 @@ import apps.aw.simplephotos.java.treenavigator.FileMetaDataReader;
 public class ImageFileExifReader implements FileMetaDataReader {
 
     //contains valid suffixes
-    private static String[] extensions = {"jpg", "jpeg", "png", "gif", "webp"};
+    private static final String[] extensions = {"jpg", "jpeg", "png", "gif", "webp"};
 
     /**
      * Checks if the given file is an image file that the Glide library can handle
      * @param file the file to be checked
      * @return true if the file is a proper image file
      */
-    public static boolean isImageFile(File file) {
+    public boolean isImageFile(File file) {
         String fileName = file.getName();
         return isImageFileName(fileName);
     }
@@ -35,7 +32,7 @@ public class ImageFileExifReader implements FileMetaDataReader {
     public static boolean isImageFileName(String fileName) {
         for (String s : extensions) { //go through all extensions
             if(getExtension(fileName).toLowerCase().equals(s)) {
-                return true;    //only true if it has one of the valid extensions, and it does not consist only of the extension
+                return true;    //only true if it has one of the valid extensionsss
             }
         }
         return false;
@@ -64,6 +61,9 @@ public class ImageFileExifReader implements FileMetaDataReader {
         try {
             ExifInterface exifInterface = new ExifInterface(imageFile);
             dateTimeString = exifInterface.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL);
+            if(dateTimeString == null) {
+                dateTimeString = "";
+            }
         }
         catch (IOException e) {
             return "";
@@ -74,7 +74,11 @@ public class ImageFileExifReader implements FileMetaDataReader {
     @Override
     public FileMetaData readFileMetaData(File file) {
         FileMetaData fileMetaData = new FileMetaData();
-        fileMetaData.originalDateTime = getExifDateTime(file);
+        fileMetaData.isImageFile = false; // is anyway false
+        if(isImageFile(file)) {
+            fileMetaData.originalDateTime = getExifDateTime(file);
+            fileMetaData.isImageFile = true;
+        }
         return fileMetaData;
     }
 

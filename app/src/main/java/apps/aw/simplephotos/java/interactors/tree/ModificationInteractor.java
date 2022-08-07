@@ -6,6 +6,7 @@ import apps.aw.simplephotos.java.actions.Actions;
 import apps.aw.simplephotos.java.storagepath.StoragePath;
 import apps.aw.simplephotos.java.storagepath.StoragePathProvider;
 import apps.aw.simplephotos.java.treenavigator.ActionNode;
+import apps.aw.simplephotos.java.treenavigator.FileMetaData;
 import apps.aw.simplephotos.java.treenavigator.FileNode;
 import apps.aw.simplephotos.java.treenavigator.NodeData;
 import apps.aw.simplephotos.java.treenavigator.tree.Node;
@@ -30,9 +31,11 @@ public class ModificationInteractor implements Modification {
     public void initialize() {
         if (!isInitialized()) {
             for(StoragePath path : storagePathProvider.getPaths()) {
-                rootNode.addChildWithData(new FileNode(path.path, path.name));
+                rootNode.addChildWithData(new FileNode(path.path, path.name, true, new FileMetaData()));
             }
-            rootNode.addChildWithData(new ActionNode("+", Actions.OPEN_SYSTEM_FILE_PICKER));
+            // TODO: add actions that make sense, e.g. Preferences, Adding Location, ...
+            // (File system picker does not exist in Android TV Boxes!)
+//            rootNode.addChildWithData(new ActionNode("Add Location", Actions.OPEN_SYSTEM_FILE_PICKER));
             isInitialized = true;
         }
     }
@@ -40,7 +43,10 @@ public class ModificationInteractor implements Modification {
     @Override
     public void addSubRoot(String path) {
         // this should insert the path at the second-last position (so that the "+" is always last)
-        rootNode.addChildWithData(new FileNode(new File(path), path), rootNode.getChildren().size() - 1);
+        rootNode.addChildWithData(
+                new FileNode(new File(path), path, true, new FileMetaData()),
+                rootNode.getChildren().size() - 1
+        );
     }
 
     Boolean isInitialized() {

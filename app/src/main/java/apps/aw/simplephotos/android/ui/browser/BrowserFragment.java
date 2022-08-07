@@ -1,19 +1,13 @@
 package apps.aw.simplephotos.android.ui.browser;
 
-import static android.app.Activity.RESULT_OK;
-
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.leanback.widget.VerticalGridView;
@@ -32,13 +26,12 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import apps.aw.simplephotos.android.AppContainer;
-import apps.aw.simplephotos.android.ui.ActivityNavigation;
 import apps.aw.simplephotos.java.Action;
 import apps.aw.simplephotos.java.Path;
 import apps.aw.simplephotos.java.presenters.browser.BrowserContract;
 import apps.aw.simplephotos.R;
-import apps.aw.simplephotos.java.Item;
-import apps.aw.simplephotos.java.ItemList;
+import apps.aw.simplephotos.java.ColumnViewData;
+import apps.aw.simplephotos.java.ItemListWithFocus;
 import apps.aw.simplephotos.java.Image;
 import apps.aw.simplephotos.android.ui.browser.adapter.FileListAdapter;
 import apps.aw.simplephotos.android.ui.browser.adapter.FileListNavigationAdapter;
@@ -178,12 +171,12 @@ public class BrowserFragment
         );
 
         column1adapter = new FileListAdapter(
-                new ItemList(),
+                new ItemListWithFocus(),
                 getContext()
         );
 
         column2adapter = new FileListNavigationAdapter(
-                new ItemList(),
+                new ItemListWithFocus(),
                 (position, hasFocus) -> {
                     Log.i("BrowserFragment", "RecyclerView: onItemFocusedListener called");
                     if(hasFocus) {
@@ -192,14 +185,14 @@ public class BrowserFragment
                 },
                 position -> {
                     Log.i("BrowserFragment", "RecyclerView: onItemClickListener called");
-                    presenter.open(position);
+                    presenter.enter();
                 },
                 this,
                 getContext()
         );
 
         column3adapter = new FileListAdapter(
-                new ItemList(),
+                new ItemListWithFocus(),
                 getContext()
         );
 
@@ -233,11 +226,12 @@ public class BrowserFragment
     }
 
     @Override
-    public void setColumn1(ItemList column) {
+    public void setColumn1(ItemListWithFocus column) {
+        assert column != null; // should this always be nonnull?
         // TODO: check if column content exists, else display loading indicator
         Log.i(TAG, "setFileListSelection for column 1");
         column1adapter.setFileListSelection(column);
-//        setColumn1Focus(column.getFocus()); // TODO: is this necessary? (focus is already contained in the fileList object?)
+        setColumn1Focus(column.getFocus());
     }
 
     private void setColumn1Focus(int index) {
@@ -246,7 +240,8 @@ public class BrowserFragment
     }
 
     @Override
-    public void setColumn2(ItemList column) {
+    public void setColumn2(ItemListWithFocus column) {
+        assert column != null; // should this always be nonnull?
         // TODO: check if column content exists, else display loading indicator
         if(column != null) {
             column2adapter.setFileListSelection(column);
@@ -259,21 +254,21 @@ public class BrowserFragment
     }
 
     @Override
-    public void setColumn3(Item item) {
-        if(item instanceof Image) {
+    public void setColumn3(ColumnViewData columnViewData) {
+        if(columnViewData instanceof Image) {
             preview.setVisibility(View.VISIBLE);
             column3view.setVisibility(View.GONE);
-            setColumn3Preview((Image) item);
+            setColumn3Preview((Image) columnViewData);
         }
-        else if(item instanceof ItemList) {
+        else if(columnViewData instanceof ItemListWithFocus) {
             column3view.setVisibility(View.VISIBLE);
             preview.setVisibility(View.GONE);
-            setColumn3List((ItemList) item);
+            setColumn3List((ItemListWithFocus) columnViewData);
         }
-        else if(item instanceof Action) {
+        else if(columnViewData instanceof Action) {
             column3view.setVisibility(View.VISIBLE);
             preview.setVisibility(View.GONE);
-            setColumn3List(ItemList.emptyItemList());
+            setColumn3List(ItemListWithFocus.emptyItemList());
         }
     }
 
@@ -286,11 +281,13 @@ public class BrowserFragment
         // TODO: check if column content exists, else display loading indicator
         ImageView imageView = preview.findViewById(R.id.imageView);
         Glide.with(this).load(imagePreview.getFile()).into(imageView);
-
+        TextView dateTextView = preview.findViewById(R.id.dateTextView);
+        dateTextView.setText(imagePreview.getDate());
         // TODO: set metadata (can display metadata even if image was not loaded, because metadata is loaded beforehand)
     }
 
-    private void setColumn3List(ItemList column) {
+    private void setColumn3List(ItemListWithFocus column) {
+        assert column != null; // should this always be nonnull?
         // TODO: check if column content exists, else display loading indicator
         column3adapter.setFileListSelection(column);
         setColumn3Focus(column.getFocus());

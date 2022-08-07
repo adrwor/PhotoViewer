@@ -2,7 +2,7 @@ package apps.aw.simplephotos.java.treenavigator;
 
 import java.time.LocalDateTime;
 
-public interface NodeData extends Comparable<NodeData> {
+public interface NodeData {
 
     int getFocus();
 
@@ -10,7 +10,7 @@ public interface NodeData extends Comparable<NodeData> {
 
     boolean isDirectory();
 
-    String toString();
+    String getName();
 
     LocalDateTime getChangeDate();
 

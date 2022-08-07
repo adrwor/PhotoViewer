@@ -2,8 +2,8 @@ package apps.aw.simplephotos.java.presenters.browser;
 
 import java.util.ArrayList;
 
-import apps.aw.simplephotos.java.Item;
-import apps.aw.simplephotos.java.ItemList;
+import apps.aw.simplephotos.java.ColumnViewData;
+import apps.aw.simplephotos.java.ItemListWithFocus;
 import apps.aw.simplephotos.java.Path;
 import apps.aw.simplephotos.java.presenters.BasePresenter;
 import apps.aw.simplephotos.java.presenters.BaseView;
@@ -19,19 +19,19 @@ public interface BrowserContract {
          * Sets the list of filenames in column 1
          * @param column the file list.
          */
-        void setColumn1(ItemList column);
+        void setColumn1(ItemListWithFocus column);
 
         /**
          * Sets the list of filenames in column 2
          * @param column The file list.
          */
-        void setColumn2(ItemList column);
+        void setColumn2(ItemListWithFocus column);
 
         /**
          * Sets the content of column3
-         * @param item The content.
+         * @param columnViewData The content.
          */
-        void setColumn3(Item item);
+        void setColumn3(ColumnViewData columnViewData);
 
         /**
          * Sets the current path.
@@ -74,7 +74,7 @@ public interface BrowserContract {
         /**
          * Called when user pressed enter on this item
          */
-        void open(int index);
+        void enter();
 
         void addSubRoot(String path);
 

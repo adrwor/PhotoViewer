@@ -2,17 +2,17 @@ package apps.aw.simplephotos.java.interactors.tree;
 
 import java.util.ArrayList;
 
-import apps.aw.simplephotos.java.Action;
 import apps.aw.simplephotos.java.FileListWithIndex;
-import apps.aw.simplephotos.java.Image;
-import apps.aw.simplephotos.java.Item;
+import apps.aw.simplephotos.java.ListItem;
 import apps.aw.simplephotos.java.ViewData;
 import apps.aw.simplephotos.java.interactors.Interactor;
 import apps.aw.simplephotos.java.interactors.shared.Navigation;
 import apps.aw.simplephotos.java.interactors.shared.NavigationOperation;
 import apps.aw.simplephotos.java.interactors.shared.NavigationOperationDirectory;
 import apps.aw.simplephotos.java.interactors.shared.NavigationOperationFocus;
-import apps.aw.simplephotos.java.interactors.shared.NavigationOperationOpen;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperationEnter;
+import apps.aw.simplephotos.java.treenavigator.ActionNode;
+import apps.aw.simplephotos.java.treenavigator.FileNode;
 import apps.aw.simplephotos.java.treenavigator.TreeNavigator;
 import apps.aw.simplephotos.java.executor.Executor;
 import apps.aw.simplephotos.java.executor.MainThread;
@@ -62,6 +62,7 @@ public class TreeNavigationInteractor implements Interactor, Navigation {
                     error = !treeNavigator.toParent(); // TODO: is this really an error?
                     break;
                 case NEUTRAL:
+                    // no change
                     break;
             }
             // we execute the callback on the mainThread
@@ -72,6 +73,7 @@ public class TreeNavigationInteractor implements Interactor, Navigation {
                         callback.onError();
                     } else {
                         callback.onSuccess(
+                                navigationOperation, // if this is executed asynchronously, this navigationOperation may have changed in the meantime, leading to the wrong callback!!
                                 new ViewData(
                                         treeNavigator.getParentItems(),
                                         treeNavigator.getItemList(),
@@ -88,10 +90,13 @@ public class TreeNavigationInteractor implements Interactor, Navigation {
             final boolean finalError = error;
             mainThread.post(new Runnable() {
                 @Override public void run() {
+                    // TODO: Note: we cannot access navigationOperation here, because it has changed in the meantime!!!!
+                    assert navigationOperation instanceof NavigationOperationFocus;
                     if(finalError) {
                         callback.onError();
                     } else {
                         callback.onSuccess(
+                                navigationOperation,
                                 new ViewData(
                                         null,
                                         null,
@@ -103,36 +108,54 @@ public class TreeNavigationInteractor implements Interactor, Navigation {
                 }
             });
         }
-        else if(navigationOperation instanceof NavigationOperationOpen) {
-            Item currentItem = treeNavigator.getContentOfFocusedChild();
-            FileListWithIndex fileListWithIndex = null;
-            if(currentItem instanceof Image) {
+        else if(navigationOperation instanceof NavigationOperationEnter) {
+            ListItem focusedListItem = treeNavigator.getItemList().getFocusedItem();
+            if(focusedListItem.type == ListItem.Type.IMAGE) {
                 // TODO: it would be nice to have an argument in the NavigationOperationOpen
                 //      object which specifies which images we want to see, e.g. only the current folder,
                 //      or all images in all subfolders etc.
+                FileNode currentFileNode = (FileNode) treeNavigator.getFocusedNodeData();
+                FileListWithIndex fileListWithIndex = null;
                 ArrayList<String> fileList = new ArrayList<>();
                 int currentImageIndex = 0;
                 int i = 0;
-                for (Item item: treeNavigator.getContentOfImageChildren()) {
-                    String path = ((Image)item).getFile().getAbsolutePath();
-                    if(path.equals(((Image)currentItem).getFile().getAbsolutePath())) {
+                for (FileNode fileNode : treeNavigator.getImageChildren()) {
+                    fileList.add(fileNode.getFile().getAbsolutePath());
+                    if (currentFileNode.getFile() == fileNode.getFile()) {
                         currentImageIndex = i;
                     }
-                    fileList.add(((Image)item).getFile().getAbsolutePath());
                     i++;
                 }
                 fileListWithIndex = new FileListWithIndex(fileList, currentImageIndex);
                 final FileListWithIndex finalFileListWithIndex = fileListWithIndex;
                 mainThread.post(new Runnable() {
                     @Override public void run() {
-                        callback.onSuccess(finalFileListWithIndex);
+                        callback.onSuccess(navigationOperation, finalFileListWithIndex);
                     }
                 });
-            }
-            else if(currentItem instanceof Action) {
+            } else if (focusedListItem.type == ListItem.Type.DIRECTORY) {
+                // We reload the content of the focused node
+                treeNavigator.resyncFocusedNode();
                 mainThread.post(new Runnable() {
                     @Override public void run() {
-                        callback.onSuccess(((Action) currentItem).action);
+                        // Note: we cannot access navigationOperation here, because it has changed in the meantime!!!!
+                        callback.onSuccess(
+                                navigationOperation,
+                                new ViewData(
+                                        null,
+                                        null,
+                                        treeNavigator.getContentOfFocusedChild(),
+                                        treeNavigator.getPathOfFocusedChild()
+                                )
+                        );
+                    }
+                });
+
+            } else if(focusedListItem.type == ListItem.Type.ACTION) {
+                ActionNode actionNode = (ActionNode) treeNavigator.getFocusedNodeData();
+                mainThread.post(new Runnable() {
+                    @Override public void run() {
+                        callback.onSuccess(navigationOperation, actionNode.action);
                     }
                 });
             } else {

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
-    <color name="colorFullImageDarkBackground">#202020</color>
-    <color name="colorTextOnDarkBrackground">#ECECEC</color>
+    <color name="colorPrimary">#00adb5</color>
+    <color name="colorPrimaryDark">#006065</color>
+    <color name="colorAccent">#ff5722</color>
+    <color name="colorFullImageDarkBackground">#101010</color>
+    <color name="color_text_on_dark_background">#ECECEC</color>
     <color name="colorGrey">#DCDCDC</color>
-    <color name="colorNavigationItemFocused">#3F51B5</color>
-    <color name="colorItemFocused">#773F51B5</color>
+    <color name="colorNavigationItemFocused">#9700ADB5</color>
+    <color name="colorItemFocused">#1700ADB5</color>
     <color name="colorItemDefault">#00000000</color>
     <color name="colorTextItemFocused">#FFFFFF</color>
     <color name="colorTextItemDefault">#000000</color>

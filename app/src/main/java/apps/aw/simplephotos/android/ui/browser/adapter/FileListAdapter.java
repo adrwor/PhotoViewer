@@ -13,37 +13,40 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import apps.aw.simplephotos.R;
-import apps.aw.simplephotos.java.ItemList;
+import apps.aw.simplephotos.java.ListItem;
+import apps.aw.simplephotos.java.ItemListWithFocus;
 
 public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHolder> {
 
     private static final String TAG = "FileListAdapter";
 
-    private ItemList itemList; //contains the filelist as well as the current selection
+    private ItemListWithFocus itemListWithFocus; //contains the filelist as well as the current selection
     private Context context;
 
     /**
      * Constructor.
-     * @param itemList
+     * @param itemListWithFocus
      */
-    public FileListAdapter(ItemList itemList, Context context) {
+    public FileListAdapter(ItemListWithFocus itemListWithFocus, Context context) {
 //        Log.i("FileListAdapter", "FileListAdapter()");
-        this.itemList = itemList;
+        this.itemListWithFocus = itemListWithFocus;
         this.context = context;
     }
 
     /**
      * Sets the file list (with selection and state).
-     * @param itemList FileListSelection object
+     * @param itemListWithFocus FileListSelection object
      */
-    public void setFileListSelection(ItemList itemList) {
+    public void setFileListSelection(ItemListWithFocus itemListWithFocus) {
+        assert itemListWithFocus != null;
 //        Log.i("FileListAdapter", "setFileListSelection() length: " + fileList.getListSize());
-        this.itemList = itemList;
+        this.itemListWithFocus = itemListWithFocus;
+        Log.i(TAG, "setFileListSelection is null: " + (this.itemListWithFocus == null));
         notifyDataSetChanged();
     }
 
     public void setFocusedItem(int index) {
-        itemList.setFocus(index);
+        itemListWithFocus.setFocus(index);
         notifyItemChanged(index);
     }
 
@@ -52,10 +55,10 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
      * @param selection FileListSelection.Selection object
      */
     public void setSelection(int selection) {
-        int oldSelectionIndex = itemList.getFocus(); //store old selection position
-        itemList.setFocus(selection);   //update selection position
+        int oldSelectionIndex = itemListWithFocus.getFocus(); //store old selection position
+        itemListWithFocus.setFocus(selection);   //update selection position
         notifyItemChanged(oldSelectionIndex);    //update view at old position
-        notifyItemChanged(itemList.getFocus()); //update view at new position
+        notifyItemChanged(itemListWithFocus.getFocus()); //update view at new position
     }
 
     @NonNull
@@ -71,22 +74,44 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.i("FileListAdapter", "onBindViewHolder()");
-        //holder.icon.setImageDrawable(null);   //TODO: set drawable according to file type
-        int p = holder.getAdapterPosition();
-        holder.text.setText(itemList.getFileList().get(p)); //set text
-        if(position == itemList.getFocus()) {
+        int p = holder.getAbsoluteAdapterPosition();
+        ListItem listItem = itemListWithFocus.getItemList().get(p);
+        holder.text.setText(listItem.name); //set text
+        switch (listItem.type) {    // set icon
+            case ROOT:
+                holder.icon.setImageResource(R.drawable.ic_root);
+                break;
+            case ACTION:
+                holder.icon.setImageResource(R.drawable.ic_add);
+                break;
+            case DIRECTORY:
+                holder.icon.setImageResource(R.drawable.ic_folder);
+                break;
+            case IMAGE:
+                holder.icon.setImageResource(R.drawable.ic_image);
+                break;
+            case BROKEN_IMAGE:
+                holder.icon.setImageResource(R.drawable.ic_broken_image);
+                break;
+            case FILE:
+                holder.icon.setImageResource(R.drawable.ic_file);
+                break;
+        }
+        if(position == itemListWithFocus.getFocus()) {
             holder.mView.setBackgroundResource(R.color.colorItemFocused);
-            holder.text.setTextColor(context.getResources().getColor(R.color.colorTextItemFocused));
+//            holder.text.setTextColor(context.getResources().getColor(R.color.colorTextItemFocused));
         } else {
             holder.mView.setBackgroundResource(R.color.colorItemDefault);
-            holder.text.setTextColor(context.getResources().getColor(R.color.colorTextItemDefault));
+//            holder.text.setTextColor(context.getResources().getColor(R.color.colorTextItemDefault));
         }
     }
 
     @Override
     public int getItemCount() {
 //        Log.i("FileListAdapter", "getItemCount()");
-        return itemList.getListSize();
+        // TODO: this still gives an npe (itemListWithFocus is null) at the start of the app
+        //      -> why?
+        return itemListWithFocus.getListSize();
     }
 
     /**
@@ -100,8 +125,8 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             Log.i("FileListAdapter", "ViewHolder()");
-            icon = (ImageView) itemView.findViewById(R.id.imageView2);
-            text = (TextView) itemView.findViewById(R.id.textView4);
+            icon = (ImageView) itemView.findViewById(R.id.iconImageView);
+            text = (TextView) itemView.findViewById(R.id.fileNameTextView);
             mView = itemView;
         }
     }

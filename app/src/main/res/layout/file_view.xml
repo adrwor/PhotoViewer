@@ -2,22 +2,24 @@
 <apps.aw.simplephotos.android.ui.browser.custom_views.NavigationItemView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="50dp"
     android:background="@drawable/item_background_color_states">
 
     <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/iconImageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:duplicateParentState="true"
+        android:padding="5dp"
         app:srcCompat="?android:attr/galleryItemBackground" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/fileNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:duplicateParentState="true"
         android:gravity="center_vertical"
         android:text="FileName"
-        android:duplicateParentState="true"
-        android:textColor="@color/item_text_color_states" />
+        android:textColor="@color/color_text_on_dark_background"
+        android:textSize="20sp" />
 </apps.aw.simplephotos.android.ui.browser.custom_views.NavigationItemView>

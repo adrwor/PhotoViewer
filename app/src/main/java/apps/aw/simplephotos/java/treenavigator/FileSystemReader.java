@@ -1,10 +1,14 @@
 package apps.aw.simplephotos.java.treenavigator;
 
+import android.util.Log;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileSystemReader {
+
+    private static final String TAG = "FileSystemReader";
 
     private final FileMetaDataReader fileMetaDataReader;
 
@@ -20,8 +24,8 @@ public class FileSystemReader {
         }
         ArrayList<FileNode> fileNodes = new ArrayList<>();
         for (File f: files) {
-            FileMetaData metaData = fileMetaDataReader.readFileMetaData(f);
-            fileNodes.add(new FileNode(f, f.getName(), metaData));
+            final FileMetaData metaData = fileMetaDataReader.readFileMetaData(f);
+            fileNodes.add(new FileNode(f, f.getName(), f.isDirectory(), metaData));
         }
         return fileNodes;
     }

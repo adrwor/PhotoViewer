@@ -14,6 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.annotation.GlideOption;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.request.RequestOptions;
 
 import apps.aw.simplephotos.R;
 import apps.aw.simplephotos.android.dpad.Dpad;
@@ -169,7 +173,12 @@ public class FullImageFragment
     public void setFullImage(Image img) {
         //load image
         Log.i(TAG, "setFullImage: " + img.getFile().toString());
-        Glide.with(this).load(img.getFile()).into(fullImageView);
+        Glide.with(this)
+                .applyDefaultRequestOptions(
+                        new RequestOptions()
+                                .format(DecodeFormat.PREFER_ARGB_8888))
+                .load(img.getFile()).into(fullImageView);
+
     }
 
     @Override

@@ -16,8 +16,10 @@ public class StoragePaths implements StoragePathProvider {
 
     public StoragePaths(Context context) {
         this.storagePaths = new ArrayList<>();
-        storagePaths.add(new StoragePath(Environment.getExternalStorageDirectory(), "storage/emulated/0"));
-        storagePaths.add(new StoragePath(new File("/"), "/"));
+        storagePaths.add(new StoragePath(Environment.getExternalStorageDirectory(), "Interner Speicher"));
+        storagePaths.add(new StoragePath(new File("/storage"), "Speicher"));
+        storagePaths.add(new StoragePath(new File("/"), "Root"));
+
 //        storagePaths.add(new StoragePath(new File("/mnt/media_rw/"), "/mnt/media_rw/"));
 
     }

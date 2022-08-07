@@ -16,11 +16,10 @@
     <application
         android:name=".android.MyApplication"
         android:allowBackup="true"
-        android:banner="@drawable/banner"
+        android:banner="@mipmap/ic_banner_foreground"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">

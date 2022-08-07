@@ -8,10 +8,6 @@ public class RootNode implements NodeData {
     final private String name;
     private int focus;
 
-    public RootNode() {
-        this.name = "Root";
-    }
-
     public RootNode(String name) {
         this.name = name;
     }
@@ -32,7 +28,7 @@ public class RootNode implements NodeData {
     }
 
     @Override
-    public String toString() {
+    public String getName() {
         return name;
     }
 
@@ -43,9 +39,4 @@ public class RootNode implements NodeData {
 
     @Override
     public void setChangeDate(LocalDateTime date) { }
-
-    @Override
-    public int compareTo(NodeData o) {
-        return -1; // Always on top
-    }
 }

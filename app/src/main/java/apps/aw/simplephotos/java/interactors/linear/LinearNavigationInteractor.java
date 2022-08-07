@@ -60,7 +60,7 @@ public class LinearNavigationInteractor implements Interactor, Navigation {
                     if(finalError) {
                         callback.onError();
                     } else {
-                        callback.onSuccess(linearNavigator.getImage());
+                        callback.onSuccess(navigationOperation, linearNavigator.getImage());
                     }
                 }
             });

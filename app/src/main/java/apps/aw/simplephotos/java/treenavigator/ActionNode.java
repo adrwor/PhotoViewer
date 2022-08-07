@@ -41,12 +41,7 @@ public class ActionNode implements NodeData {
 
     @NonNull
     @Override
-    public String toString() {
+    public String getName() {
         return name;
-    }
-
-    @Override
-    public int compareTo(NodeData o) {
-        return 0;
     }
 }

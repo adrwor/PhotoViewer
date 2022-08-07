@@ -12,6 +12,7 @@ import apps.aw.simplephotos.java.interactors.tree.ModificationInteractor;
 import apps.aw.simplephotos.java.interactors.tree.TreeNavigationInteractor;
 import apps.aw.simplephotos.java.storagepath.StoragePathProvider;
 import apps.aw.simplephotos.java.treenavigator.FileMetaDataReader;
+import apps.aw.simplephotos.java.treenavigator.NodeComparator;
 import apps.aw.simplephotos.java.treenavigator.NodeData;
 import apps.aw.simplephotos.java.treenavigator.RootNode;
 import apps.aw.simplephotos.java.treenavigator.TreeNavigator;
@@ -28,9 +29,15 @@ public class AppContainer {
     public Modification modification;
 
     public AppContainer(Context context) {
-        Node<NodeData> rootNode = new Node<>(null, new ArrayList<>(), new RootNode(), false);
+        Node<NodeData> rootNode = new Node<>(
+                null,
+                new ArrayList<>(),
+                new RootNode("Android TV Box"),
+                false
+        );
         FileMetaDataReader fileMetaDataReader = new ImageFileExifReader();
-        TreeNavigator treeNavigator = new TreeNavigatorImpl(rootNode, fileMetaDataReader);
+        NodeComparator nodeComparator = new NodeComparator();
+        TreeNavigator treeNavigator = new TreeNavigatorImpl(rootNode, fileMetaDataReader, nodeComparator);
         Executor executor = new ThreadExecutor();
         MainThread mainThread = new MainThreadImpl();
         StoragePathProvider storagePathProvider = new StoragePaths(context);

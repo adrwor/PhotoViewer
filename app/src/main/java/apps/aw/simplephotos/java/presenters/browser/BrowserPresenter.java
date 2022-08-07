@@ -4,11 +4,12 @@ import android.util.Log;
 
 import apps.aw.simplephotos.java.FileListWithIndex;
 import apps.aw.simplephotos.java.interactors.shared.Navigation;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperation;
 import apps.aw.simplephotos.java.interactors.tree.Modification;
 import apps.aw.simplephotos.java.interactors.shared.NavigationOperationDirectory;
 import apps.aw.simplephotos.java.interactors.shared.NavigationOperationFocus;
 import apps.aw.simplephotos.java.ViewData;
-import apps.aw.simplephotos.java.interactors.shared.NavigationOperationOpen;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperationEnter;
 
 public class BrowserPresenter implements BrowserContract.Presenter {
 
@@ -44,12 +45,13 @@ public class BrowserPresenter implements BrowserContract.Presenter {
                 new NavigationOperationDirectory(NavigationOperationDirectory.Direction.NEUTRAL),
                 new Navigation.Callback() {
                     @Override
-                    public void onSuccess(Object object) {
+                    public void onSuccess(NavigationOperation navigationOperation, Object object) {
+                        assert navigationOperation instanceof NavigationOperationDirectory;
                         assert(object instanceof ViewData);
                         ViewData viewData = (ViewData)object;
                         view.setColumn1(viewData.column1);
                         view.setColumn2(viewData.column2);
-                        view.setColumn3(viewData.item);
+                        view.setColumn3(viewData.columnViewData);
                         view.setPath(viewData.path);
                     }
 
@@ -81,7 +83,8 @@ public class BrowserPresenter implements BrowserContract.Presenter {
                 new NavigationOperationFocus(index),
                 new Navigation.Callback() {
                     @Override
-                    public void onSuccess(Object object) {
+                    public void onSuccess(NavigationOperation navigationOperation, Object object) {
+                        assert navigationOperation instanceof NavigationOperationFocus;
                         assert(object instanceof ViewData);
                         ViewData viewData = (ViewData)object;
                         assert(viewData.column1 == null);
@@ -90,7 +93,7 @@ public class BrowserPresenter implements BrowserContract.Presenter {
                         // because the view may not be updated yet
                         // Also: they are null in this viewData object
                         Log.i(TAG, "focus(" + index + ") onSuccess()");
-                        view.setColumn3(viewData.item);
+                        view.setColumn3(viewData.columnViewData);
                         view.setPath(viewData.path);
                     }
 
@@ -110,13 +113,14 @@ public class BrowserPresenter implements BrowserContract.Presenter {
                 new NavigationOperationDirectory(NavigationOperationDirectory.Direction.PARENT),
                 new Navigation.Callback() {
                     @Override
-                    public void onSuccess(Object object) {
+                    public void onSuccess(NavigationOperation navigationOperation, Object object) {
+                        assert navigationOperation instanceof NavigationOperationDirectory;
                         assert(object instanceof ViewData);
                         ViewData viewData = (ViewData)object;
                         Log.i(TAG, "toParent() onSuccess()");
                         view.setColumn1(viewData.column1);
                         view.setColumn2(viewData.column2);
-                        view.setColumn3(viewData.item);
+                        view.setColumn3(viewData.columnViewData);
                         view.setPath(viewData.path);
                     }
 
@@ -136,17 +140,15 @@ public class BrowserPresenter implements BrowserContract.Presenter {
                 new NavigationOperationDirectory(NavigationOperationDirectory.Direction.CHILD),
                 new Navigation.Callback() {
                     @Override
-                    public void onSuccess(Object object) {
+                    public void onSuccess(NavigationOperation navigationOperation, Object object) {
+                        assert navigationOperation instanceof NavigationOperationDirectory;
                         assert(object instanceof ViewData);
                         ViewData viewData = (ViewData)object;
                         Log.i(TAG, "toChild() onSuccess()");
                         Log.i(TAG, "Column 1:");
-                        for (String s: viewData.column1.getFileList()) {
-                            Log.i(TAG, "file: " + s);
-                        }
                         view.setColumn1(viewData.column1);
                         view.setColumn2(viewData.column2);
-                        view.setColumn3(viewData.item);
+                        view.setColumn3(viewData.columnViewData);
                         view.setPath(viewData.path);
                     }
 
@@ -160,20 +162,30 @@ public class BrowserPresenter implements BrowserContract.Presenter {
     }
 
     @Override
-    public void open(int index) {
+    public void enter() {
         Log.i(TAG, "enter()");
         navigation.execute(
                 // TODO: provide a special sub-class which specifies that an image should be opened
                 //  the navigation then decides if it is successful or not
-                new NavigationOperationOpen(index),
+                new NavigationOperationEnter(),
                 new Navigation.Callback() {
                     @Override
-                    public void onSuccess(Object object) {
+                    public void onSuccess(NavigationOperation navigationOperation, Object object) {
+                        assert navigationOperation instanceof NavigationOperationEnter;
                         if(object instanceof FileListWithIndex) { // TODO:  create explicit types to distinguish between these callbacks
                             FileListWithIndex fileListWithIndex = (FileListWithIndex)object;
                             view.showFullImageView(fileListWithIndex.list, fileListWithIndex.index);
                         } else if (object instanceof Integer) { // TODO:  create explicit types to distinguish between these callbacks
                             view.openSystemFilePicker();
+                        } else if (object instanceof ViewData) { // user wanted to sync the current file
+                            ViewData viewData = (ViewData)object;
+                            assert(viewData.column1 == null);
+                            assert(viewData.column2 == null);
+                            // Important: we must not update column1 and column2,
+                            // because the view may not be updated yet
+                            // Also: they are null in this viewData object
+                            view.setColumn3(viewData.columnViewData);
+                            view.setPath(viewData.path);
                         }
                     }
                     @Override
@@ -190,12 +202,13 @@ public class BrowserPresenter implements BrowserContract.Presenter {
                 new NavigationOperationDirectory(NavigationOperationDirectory.Direction.NEUTRAL),
                 new Navigation.Callback() {
                     @Override
-                    public void onSuccess(Object object) {
+                    public void onSuccess(NavigationOperation navigationOperation, Object object) {
+                        assert navigationOperation instanceof NavigationOperationDirectory;
                         assert(object instanceof ViewData);
                         ViewData viewData = (ViewData)object;
                         view.setColumn1(viewData.column1);
                         view.setColumn2(viewData.column2);
-                        view.setColumn3(viewData.item);
+                        view.setColumn3(viewData.columnViewData);
                         view.setPath(viewData.path);
                     }
 

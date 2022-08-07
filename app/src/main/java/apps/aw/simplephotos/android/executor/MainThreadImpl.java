@@ -15,6 +15,7 @@ public class MainThreadImpl implements MainThread {
 
     @Override
     public void post(Runnable runnable) {
-        handler.post(runnable);
+        runnable.run();
+//        handler.post(runnable);
     }
 }

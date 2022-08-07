@@ -4,7 +4,8 @@ import java.time.LocalDateTime;
 
 public class FileMetaData implements Comparable<FileMetaData> {
 
-    public String originalDateTime;
+    public String originalDateTime = "";
+    public boolean isImageFile = false;
     // TODO: add more data fields (maybe use some kind of map?)
 
     @Override

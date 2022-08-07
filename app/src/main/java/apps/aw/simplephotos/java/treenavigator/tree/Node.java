@@ -1,12 +1,13 @@
 package apps.aw.simplephotos.java.treenavigator.tree;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
-public class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
+public class Node<T> {
 
-    private final boolean sortChildren;
+    public final boolean sortChildren;
     private final Node<T> parent;
     private List<Node<T>> children;
     private T data;
@@ -16,25 +17,16 @@ public class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
         this.children = children;
         this.data = data;
         this.sortChildren = sortChildren;
-        if(sortChildren) {
-            sortChildren();
-        }
     }
 
     public void addChildWithData(T data) {
         assert (this.children != null);
         this.children.add(new Node<T>(this, null, data, true));
-        if(sortChildren) {
-            sortChildren();
-        }
     }
 
     public void addChildWithData(T data, int position) {
         assert (this.children != null);
         this.children.add(position, new Node<T>(this, null, data, true));
-        if(sortChildren) {
-            sortChildren();
-        }
     }
 
     public T getData() {
@@ -49,8 +41,10 @@ public class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
         return getChildren() != null && !getChildren().isEmpty();
     }
 
-    public void sortChildren() {
-        Collections.sort(children);
+    public void sortChildren(Comparator<Node<T>> nodeComparator) {
+        if(children != null) {
+            Collections.sort(children, nodeComparator);
+        }
     }
 
     public List<Node<T>> getChildren() {
@@ -59,17 +53,14 @@ public class Node<T extends Comparable<T>> implements Comparable<Node<T>> {
 
     public void setChildren(List<Node<T>> children) {
         this.children = children;
-        if(sortChildren) {
-            sortChildren();
-        }
     }
 
     public Node<T> getParent() {
         return parent;
     }
-
-    @Override
-    public int compareTo(Node<T> o) {
-        return this.getData().compareTo(o.getData());
-    }
+//
+//    @Override
+//    public int compareTo(Node<T> o) {
+//        return this.getData().compareTo(o.getData());
+//    }
 }

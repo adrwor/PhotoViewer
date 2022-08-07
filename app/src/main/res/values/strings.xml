@@ -1,6 +1,11 @@
 <resources>
-    <string name="app_name">SimplePhotos</string>
+    <string name="app_name">Picture Viewer</string>
 
     <string name="root_directory">/</string>
+
+    <string name="hint1">Pfeiltasten: navigieren</string>
+    <string name="hint2">Enter auf Bild: Vollbild</string>
+    <string name="hint3">Enter auf Ordner: Neu laden</string>
+
 
 </resources>

@@ -12,12 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import apps.aw.simplephotos.R;
-import apps.aw.simplephotos.java.ItemList;
+import apps.aw.simplephotos.java.ItemListWithFocus;
 import apps.aw.simplephotos.android.ui.browser.custom_views.NavigationItemView;
+import apps.aw.simplephotos.java.ListItem;
 
 public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavigationAdapter.ViewHolder> {
 
-    private ItemList itemList; //contains the filelist as well as the current selection
+    private ItemListWithFocus itemListWithFocus; //contains the filelist as well as the current selection
     private Context context;
     private ItemFocusedListener itemFocusedListener;    //handles focus events
     private ItemClickListener itemClickListener;        //handles the click events
@@ -25,16 +26,16 @@ public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavi
 
     /**
      * Constructor.
-     * @param itemList
+     * @param itemListWithFocus
      */
     public FileListNavigationAdapter(
-            ItemList itemList,
+            ItemListWithFocus itemListWithFocus,
             ItemFocusedListener itemFocusedListener,
             ItemClickListener itemClickListener,
             NavigationItemView.NavigationKeyHandler navigationKeyHandler,
             Context context
             ) {
-        this.itemList = itemList;
+        this.itemListWithFocus = itemListWithFocus;
         this.itemFocusedListener = itemFocusedListener;
         this.itemClickListener = itemClickListener;
         this.navigationKeyHandler = navigationKeyHandler;
@@ -43,11 +44,11 @@ public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavi
 
     /**
      * Sets the file list (with selection and state).
-     * @param itemList FileListSelection object
+     * @param itemListWithFocus FileListSelection object
      */
-    public void setFileListSelection(ItemList itemList) {
-        Log.i("FileListAdapter", "setFileListSelection() length: " + itemList.getListSize());
-        this.itemList = itemList;
+    public void setFileListSelection(ItemListWithFocus itemListWithFocus) {
+        Log.i("FileListAdapter", "setFileListSelection() length: " + itemListWithFocus.getListSize());
+        this.itemListWithFocus = itemListWithFocus;
         notifyDataSetChanged();
     }
 
@@ -67,9 +68,29 @@ public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.i("FileListAdapter", "onBindViewHolder()");
-        //holder.icon.setImageDrawable(null);   //TODO: set drawable according to file type
-        int p = holder.getAdapterPosition();
-        holder.text.setText(itemList.getFileList().get(p));
+        int p = holder.getAbsoluteAdapterPosition();
+        ListItem listItem = itemListWithFocus.getItemList().get(p);
+        holder.text.setText(listItem.name); //set text
+        switch (listItem.type) {    // set icon
+            case ROOT:
+                holder.icon.setImageResource(R.drawable.ic_root);
+                break;
+            case ACTION:
+                holder.icon.setImageResource(R.drawable.ic_add);
+                break;
+            case DIRECTORY:
+                holder.icon.setImageResource(R.drawable.ic_folder);
+                break;
+            case IMAGE:
+                holder.icon.setImageResource(R.drawable.ic_image);
+                break;
+            case BROKEN_IMAGE:
+                holder.icon.setImageResource(R.drawable.ic_broken_image);
+                break;
+            case FILE:
+                holder.icon.setImageResource(R.drawable.ic_file);
+                break;
+        }
         holder.view.setOnFocusChangeListener(
                 (v, hasFocus) -> {
                     itemFocusedListener.onItemFocusChanged(p, hasFocus);
@@ -82,7 +103,7 @@ public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavi
 //            }
         });
         holder.view.setKeyPressHandler(navigationKeyHandler);
-        if(position == itemList.getFocus()) {
+        if(position == itemListWithFocus.getFocus()) {
             boolean f = holder.view.requestFocus();
             Log.i("FileListNavigationAdpt", "view took focus: " + f);
         }
@@ -90,7 +111,7 @@ public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavi
 
     @Override
     public int getItemCount() {
-        return itemList.getListSize();
+        return itemListWithFocus.getListSize();
     }
 
 
@@ -107,8 +128,8 @@ public class FileListNavigationAdapter extends RecyclerView.Adapter<FileListNavi
         public ViewHolder(NavigationItemView itemView) {
             super(itemView);
             Log.i("FileListAdapter", "ViewHolder()");
-            icon = (ImageView) itemView.findViewById(R.id.imageView2);
-            text = (TextView) itemView.findViewById(R.id.textView4);
+            icon = (ImageView) itemView.findViewById(R.id.iconImageView);
+            text = (TextView) itemView.findViewById(R.id.fileNameTextView);
             view = itemView;
         }
     }

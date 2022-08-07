@@ -4,7 +4,9 @@ import android.util.Log;
 
 import apps.aw.simplephotos.java.Image;
 import apps.aw.simplephotos.java.interactors.shared.Navigation;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperation;
 import apps.aw.simplephotos.java.interactors.shared.NavigationOperationDirection;
+import apps.aw.simplephotos.java.interactors.shared.NavigationOperationDirectory;
 
 public class FullImagePresenter implements FullImageContract.Presenter {
 
@@ -35,7 +37,8 @@ public class FullImagePresenter implements FullImageContract.Presenter {
                 new NavigationOperationDirection(NavigationOperationDirection.Direction.NEXT),
                 new Navigation.Callback() {
                     @Override
-                    public void onSuccess(Object object) {
+                    public void onSuccess(NavigationOperation navigationOperation, Object object) {
+                        assert navigationOperation instanceof NavigationOperationDirection;
                         assert(object instanceof Image);
                         Image image = (Image)object;
                         view.setFullImage(image);
@@ -55,7 +58,8 @@ public class FullImagePresenter implements FullImageContract.Presenter {
                 new NavigationOperationDirection(NavigationOperationDirection.Direction.PREVIOUS),
                 new Navigation.Callback() {
                     @Override
-                    public void onSuccess(Object object) {
+                    public void onSuccess(NavigationOperation navigationOperation, Object object) {
+                        assert navigationOperation instanceof NavigationOperationDirection;
                         assert(object instanceof Image);
                         Image image = (Image)object;
                         view.setFullImage(image);
@@ -78,7 +82,8 @@ public class FullImagePresenter implements FullImageContract.Presenter {
                 new NavigationOperationDirection(NavigationOperationDirection.Direction.NEUTRAL),
                 new Navigation.Callback() {
                     @Override
-                    public void onSuccess(Object object) {
+                    public void onSuccess(NavigationOperation navigationOperation, Object object) {
+                        assert navigationOperation instanceof NavigationOperationDirection;
                         assert(object instanceof Image);
                         Image image = (Image)object;
                         Log.i(TAG, "initialize(): onSuccess()!");

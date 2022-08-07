@@ -26,7 +26,8 @@
         android:background="#80202020"
         android:padding="10dp"
         android:text="Image Info"
-        android:textColor="@color/colorTextOnDarkBrackground"
-        android:textSize="18sp" />
+        android:textColor="@color/color_text_on_dark_background"
+        android:textSize="18sp"
+        android:visibility="gone" />
 
 </FrameLayout>

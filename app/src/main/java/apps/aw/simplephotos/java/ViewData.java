@@ -1,15 +1,15 @@
 package apps.aw.simplephotos.java;
 
 public class ViewData {
-    public ItemList column1;
-    public ItemList column2;
-    public Item item;
+    public ItemListWithFocus column1;
+    public ItemListWithFocus column2;
+    public ColumnViewData columnViewData;
     public Path path;
 
-    public ViewData(ItemList column1, ItemList column2, Item item, Path path) {
+    public ViewData(ItemListWithFocus column1, ItemListWithFocus column2, ColumnViewData columnViewData, Path path) {
         this.column1 = column1;
         this.column2 = column2;
-        this.item = item;
+        this.columnViewData = columnViewData;
         this.path = path;
     }
 }

@@ -1,14 +1,12 @@
 package apps.aw.simplephotos.java;
 
-import android.os.Parcelable;
-
 import java.io.File;
 
 /**
  * This class contains all data of an image, i.e.
  *  the filename, size, ...
  */
-public class Image extends Item {
+public class Image extends ColumnViewData {
 
     private final File file;
     private final String date;
