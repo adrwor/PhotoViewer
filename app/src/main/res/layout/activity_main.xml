@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/fragment"
-        android:name="apps.aw.simplephotos.android.ui.browser.BrowserFragment"
+        android:name="apps.aw.photoviewer.android.ui.browser.BrowserFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/constraintLayout"

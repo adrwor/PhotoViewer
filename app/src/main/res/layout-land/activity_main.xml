@@ -12,7 +12,7 @@
         android:id="@+id/fragmentContainerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="apps.aw.simplephotos.android.ui.browser.BrowserFragment"/>
+        android:name="apps.aw.photoviewer.android.ui.browser.BrowserFragment"/>
 
 
 </FrameLayout>

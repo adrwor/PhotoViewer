@@ -8,7 +8,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView2"
-        android:name="apps.aw.simplephotos.android.ui.full_image.FullImageFragment"
+        android:name="apps.aw.photoviewer.android.ui.full_image.FullImageFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </FrameLayout>
